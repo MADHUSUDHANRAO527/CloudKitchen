@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SideNavigationViewTextStyle">
+        <item name="android:fontFamily">@font/quicksandsemibold</item>
+        <item name="android:textSize">16sp</item>
+
+        <item name="android:textColor">
+            #FFDA78
+        </item>
+    </style>
+    <style name="BottomNavigationViewTextStyle">
+        <item name="android:fontFamily">@font/quicksandbold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <style name="BottomNavigationViewInActiveTextStyle">
+        <item name="android:fontFamily">@font/quicksandbold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
+    <style name="SetPoppinsSemiBoldFont">
+        <item name="android:fontFamily">@font/poppins_semi_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="SetPoppinsRegularFont">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="SetPoppinsLightFont">
+        <item name="android:fontFamily">@font/poppins_light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="SetPoppinsMediumFont">
+        <item name="android:fontFamily">@font/poppins_medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="NavView" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+
+    </style>
+    <style name="ShapeAppearanceOverlay.App.SelectedCornerCut" parent="">
+        <item name="cornerSizeTopLeft">10dp</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeBottomRight">10dp</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+    </style>
+</resources>

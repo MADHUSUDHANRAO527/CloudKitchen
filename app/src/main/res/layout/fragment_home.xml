@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:fillViewport="true"
+    android:focusable="true"
+    android:background="#F9F9F9"
+    android:layout_marginBottom="100dp"
+    android:scrollbars="none">
+
+    <RelativeLayout
+        android:id="@+id/home_parent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F9F9F9"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/location_search"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="68dp"
+            android:layout_marginEnd="14dp"
+            style="@style/SetPoppinsLightFont"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/edit_box"
+            android:elevation="30dp"
+            android:stateListAnimator="@null"
+            android:textCursorDrawable="@null"
+            app:defaultQueryHint="@string/search"
+            app:iconifiedByDefault="false"
+            app:queryBackground="@null"
+            app:suggestionRowLayout="@layout/location_search_layout" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:id="@+id/homepBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/gold"
+                android:indeterminateTintMode="src_atop" />
+        </RelativeLayout>
+
+        <com.smarteist.autoimageslider.SliderView
+            android:id="@+id/imageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:animationCache="true"
+            android:layout_below="@+id/location_search"
+            app:sliderAnimationDuration="100"
+            app:sliderAutoCycleDirection="back_and_forth"
+            app:sliderIndicatorAnimationDuration="300"
+            app:sliderIndicatorEnabled="true"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorRadius="1dp"
+            app:sliderIndicatorSelectedColor="@color/gold"
+            app:sliderIndicatorUnselectedColor="#7AFFFFFF"
+            app:sliderScrollTimeInSec="3"
+            app:sliderStartAutoCycle="true" />
+
+        <TextView
+            android:id="@+id/kitchen_title_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/kitchens_around_you"
+            android:textSize="18sp"
+            style="@style/SetPoppinsSemiBoldFont"
+            android:padding="4dp"
+            android:layout_marginStart="20dp"
+            android:layout_below="@+id/imageSlider"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_meals"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:nestedScrollingEnabled="true"
+            android:layout_below="@+id/kitchen_title_txt"
+            android:layout_marginTop="14dp" />
+    </RelativeLayout>
+
+    <!-- <TextView
+        android:id="@+id/continue_watching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:text="@string/continue_watching"
+        android:textStyle="bold"
+        android:layout_below="@+id/recycler_languages"
+        android:textAppearance="@style/whiteheading" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_continue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/continue_watching"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingTop="5dp"
+        tools:listitem="@layout/action_items" />
+
+    <RelativeLayout
+        android:id="@+id/high_rated_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recycler_continue"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/high_rated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:text="@string/high_rated"
+            android:textStyle="bold"
+            android:textAppearance="@style/whiteheading" />
+
+        <TextView
+            android:id="@+id/high_rated_view_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:textStyle="normal"
+            android:text="@string/view"
+            android:textAppearance="@style/viewheading" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/short_films_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recycler_high_rated"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/short_films"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:text="@string/shortfilms"
+            android:textStyle="bold"
+            android:textAppearance="@style/whiteheading" />
+
+        <TextView
+            android:id="@+id/short_films_view_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:textStyle="normal"
+            android:text="@string/view"
+            android:textAppearance="@style/viewheading" />
+    </RelativeLayout>
+
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_languages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/language"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingTop="5dp"
+        tools:listitem="@layout/recycler_item" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_high_rated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/high_rated_view"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingTop="5dp"
+        tools:listitem="@layout/rating_items" />
+
+
+ </RelativeLayout>-->
+</ScrollView>

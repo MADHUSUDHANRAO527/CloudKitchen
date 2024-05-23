@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- regular -->
+    <font
+        android:font="@font/quicksandregular"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:font="@font/quicksandregular"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+
+    <!-- italic -->
+    <font
+        android:font="@font/quicksandsemibold"
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        app:font="@font/quicksandsemibold"
+        app:fontStyle="normal"
+        app:fontWeight="600" />
+
+    <!-- bold -->
+    <font
+        android:font="@font/quicksandbold"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        app:font="@font/quicksandbold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+    <font
+        android:font="@font/poppins_semi_bold"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        app:font="@font/poppins_semi_bold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+
+</font-family>

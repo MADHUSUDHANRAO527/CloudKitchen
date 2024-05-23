@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443766595964",
+    "project_id": "mealbox-129ec",
+    "storage_bucket": "mealbox-129ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443766595964:android:fa29edfedd085458a704f9",
+        "android_client_info": {
+          "package_name": "com.mobile.cloudkitchen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx_vNgOaEAzUJpSNf1pRii2tmNDh2NhsY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

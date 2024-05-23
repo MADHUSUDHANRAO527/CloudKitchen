@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mobile.cloudkitchen.ui.fragments.AddAddressDialogFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:text="@string/enter_address_details"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/full_name"
+                style="@style/SetPoppinsSemiBoldFont"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:id="@+id/end_date_"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/duration_btn_bg_shape">
+
+                <EditText
+                    android:id="@+id/full_name_txt"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:editable="true"
+                    android:hint="@string/enter_full_name"
+                    android:padding="4dp"
+                    android:textAlignment="textStart"
+                    android:textColor="#818181"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/phone_number"
+                style="@style/SetPoppinsSemiBoldFont"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/duration_btn_bg_shape">
+
+                <EditText
+                    android:id="@+id/ph_num_et"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@null"
+                    android:editable="true"
+                    android:hint="@string/enter_phone_number"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:padding="4dp"
+                    android:textAlignment="textStart"
+                    android:textColor="#818181"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/building_name"
+                style="@style/SetPoppinsSemiBoldFont"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/duration_btn_bg_shape">
+
+                <EditText
+                    android:id="@+id/building_name_txt"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@null"
+                    android:maxLength="30"
+                    android:editable="true"
+                    android:hint="@string/building_name"
+                    android:padding="4dp"
+                    android:textAlignment="textStart"
+                    android:textColor="#818181"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/area"
+                style="@style/SetPoppinsSemiBoldFont"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/duration_btn_bg_shape">
+
+                <EditText
+                    android:id="@+id/area_txt"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@null"
+                    android:editable="true"
+                    android:hint="@string/enter_address"
+                    android:padding="4dp"
+                    android:singleLine="true"
+                    android:textAlignment="textStart"
+                    android:textColor="#818181"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/SetPoppinsSemiBoldFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/landmark"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/duration_btn_bg_shape">
+
+                <EditText
+                    android:id="@+id/landmark_txt"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@null"
+                    android:hint="@string/landmark"
+                    android:padding="4dp"
+                    android:singleLine="true"
+                    android:textAlignment="textStart"
+                    android:textColor="#818181"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/zip_code"
+                style="@style/SetPoppinsSemiBoldFont"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/duration_btn_bg_shape">
+
+                <EditText
+                    android:id="@+id/zipcode_txt"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@null"
+                    android:editable="true"
+                    android:hint="@string/zip_code"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:padding="4dp"
+                    android:textAlignment="textStart"
+                    android:textColor="#818181"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/city"
+                style="@style/SetPoppinsSemiBoldFont"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/duration_btn_bg_shape">
+
+                <EditText
+                    android:id="@+id/city_txt"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@null"
+                    android:editable="true"
+                    android:hint="@string/city"
+                    android:singleLine="true"
+                    android:padding="4dp"
+                    android:textAlignment="textStart"
+                    android:textColor="#818181"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+        <Button
+            android:id="@+id/add_address_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/login_btn_bg_shape"
+            android:text="@string/add_address"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

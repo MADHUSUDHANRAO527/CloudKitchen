@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_splash_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/_txt"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_above="@+id/center_layout"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_hot_food" />
+
+    <RelativeLayout
+        android:id="@+id/center_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+    <TextView
+        android:id="@+id/intro_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Introducing"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="34sp"
+        app:font="@font/poppins_regular" />
+
+        <TextView
+            android:id="@+id/home_txt"
+            style="@style/SetPoppinsLightFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/intro_txt"
+            android:layout_centerInParent="true"
+            android:text="Home-Made"
+            android:textColor="@color/black"
+            android:textSize="42sp" />
+
+        <TextView
+            android:id="@+id/kitchens_txt"
+            style="@style/SetPoppinsLightFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/home_txt"
+            android:layout_centerInParent="true"
+            android:text="Kitchens"
+            android:textColor="@color/black"
+            android:textSize="42sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/kitchens_txt"
+            android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/hq_txt"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_guarante" />
+        <TextView
+            android:id="@+id/high_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High Quality"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/hq_txt"
+            app:font="@font/poppins_regular" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/ce_img"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_expensive_price"
+            android:layout_below="@+id/kitchens_txt"
+            />
+        <TextView
+            android:id="@+id/ce_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cost_efficient"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            app:font="@font/poppins_regular" />
+        </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <Button
+        android:id="@+id/get_started_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginEnd="34dp"
+        android:background="@drawable/login_btn_bg_shape"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="74dp"
+        android:gravity="center"
+        android:padding="14dp"
+        android:text="@string/get_started"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+</RelativeLayout>
