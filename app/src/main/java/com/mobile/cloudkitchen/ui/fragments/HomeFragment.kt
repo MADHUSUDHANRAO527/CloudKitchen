@@ -26,6 +26,7 @@ import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
 import com.mobile.cloudkitchen.ui.adapter.HomeMainSliderAdapter
+import com.mobile.cloudkitchen.utils.AppUtils
 import com.smarteist.autoimageslider.SliderView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -128,43 +129,7 @@ class HomeFragment : Fragment(), ServiceResponse {
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {
         binding.homepBar.visibility = View.GONE
-        if (error is NetworkError) {
-            Toast.makeText(
-                activity,
-                "NetworkError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ServerError) {
-            Toast.makeText(
-                activity,
-                "ServerError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is AuthFailureError) {
-            Toast.makeText(
-                activity,
-                "AuthFailureError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ParseError) {
-            Toast.makeText(
-                activity,
-                "ParseError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is NoConnectionError) {
-            Toast.makeText(
-                activity,
-                "NoConnectionError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is TimeoutError) {
-            Toast.makeText(
-                activity,
-                "Oops. Timeout error!",
-                Toast.LENGTH_LONG
-            ).show();
-        }
+        AppUtils.showErrorMsg(error, tag.toString(), requireActivity())
     }
 
     private fun setImageInSlider(images: ArrayList<DashBoardBannerModel>, imageSlider: SliderView) {

@@ -33,6 +33,7 @@ import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
 import com.mobile.cloudkitchen.utils.AppUtils
+import com.mobile.cloudkitchen.utils.UserUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -68,14 +69,14 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
 
         val args = arguments
         val kitchenId = args?.getString("kitchen_id", "0")
-        val mealId = args?.getString("meal_id", "0")
+     //   val mealId = args?.getString("meal_id", "0")
         planType = args?.getString("plan_type", "NA").toString()
 
 
         APIService.makeKitchenDetailsAPICall(
             requireActivity(),
             this,
-            "meals/$mealId",
+            "meals/${UserUtils.mealID}",
             sp.getString("TOKEN", "NA")
         )
 
@@ -93,8 +94,8 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
         _binding!!.selectMenuBtn.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("kitchen_id", kitchenId)
-            bundle.putString("meal_id", mealId)
-            (requireActivity() as HomeActivity?)?.loadFragment(ViewMenuFragment(), bundle)
+          //  bundle.putString("meal_id", UserUtils.mealID)
+            (requireActivity() as HomeActivity?)?.loadFragment(PlaceOrderFragment(), bundle)
         }
         return root
     }
@@ -232,61 +233,7 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {
         binding.pBar.visibility = View.GONE
-        if (error is ClientError) {
-            var msg = (JSONObject(
-                String(
-                    error.networkResponse.data,
-                    charset("UTF-8")
-                )
-            ).getString("error"))
-            Toast.makeText(
-                requireActivity(),
-                msg,
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is NetworkError) {
-            Toast.makeText(
-                requireActivity(),
-                "NetworkError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ServerError) {
-            Toast.makeText(
-                requireActivity(),
-                "ServerError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is AuthFailureError) {
-            Toast.makeText(
-                requireActivity(),
-                "AuthFailureError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ParseError) {
-            Toast.makeText(
-                requireActivity(),
-                "ParseError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is NoConnectionError) {
-            Toast.makeText(
-                requireActivity(),
-                "NoConnectionError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is TimeoutError) {
-            Toast.makeText(
-                requireActivity(),
-                "Oops. Timeout error!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ClientError) {
-            Toast.makeText(
-                requireActivity(),
-                "Oops. ClientError",
-                Toast.LENGTH_LONG
-            ).show();
-        }
+        AppUtils.showErrorMsg(error, tag.toString(), requireActivity())
     }
 
 }

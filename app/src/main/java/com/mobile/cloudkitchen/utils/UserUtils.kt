@@ -10,7 +10,6 @@ object UserUtils {
     private lateinit var userInfo : UserInfo
     private lateinit var addresses: Addresses
     private lateinit var kitchen: Kitchen
-
     fun getUserID(activity: Activity): String? {
          return activity.getSharedPreferences("SP", Context.MODE_PRIVATE).getString("USERID","NA")
     }
@@ -29,6 +28,11 @@ object UserUtils {
     fun getKitchen(): Kitchen{
         return kitchen
     }
+    var mealID : String =""
+        get() = field
+        set(value) {
+            field = value
+        }
     fun setSelectedAddress(mAddresses: Addresses){
         this.addresses = mAddresses
     }

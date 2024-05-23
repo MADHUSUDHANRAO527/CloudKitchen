@@ -29,8 +29,6 @@ import java.util.concurrent.TimeUnit
 
 class SelectDurationFragment : Fragment() {
     private var _binding: FragmentSelectDurationBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     lateinit var sp: SharedPreferences
     private val binding get() = _binding!!
     private  var planType: String =""

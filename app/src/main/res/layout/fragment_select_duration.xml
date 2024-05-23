@@ -170,25 +170,25 @@
                 android:layout_below="@+id/select_slot_txt"
                 android:orientation="vertical">
 
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_marginTop="12dp"
                     android:orientation="horizontal">
+
                     <TextView
+                        style="@style/SetPoppinsRegularFont"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:layout_marginStart="2dp"
-                        android:text="@string/slot_1"
-                        android:layout_centerInParent="true"
                         android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:padding="4dp"
+                        android:paddingEnd="8dp"
+                        android:text="Slot - 1"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        style="@style/SetPoppinsRegularFont"
                         android:textStyle="bold" />
 
 
@@ -196,68 +196,65 @@
                         android:id="@+id/select_btn_first_slot_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginEnd="12dp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:paddingTop="4dp"
                         android:layout_centerInParent="true"
-                        android:paddingBottom="4dp"
-                        android:layout_marginStart="22dp"
-                        android:background="@drawable/duration_btn_bg_shape">
+                        android:background="@drawable/duration_btn_bg_shape"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="4dp">
+
                         <TextView
+                            style="@style/SetPoppinsRegularFont"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="4dp"
                             android:layout_marginStart="2dp"
+                            android:padding="4dp"
                             android:text="12:30 P.M - 01.00 P.M"
                             android:textAlignment="textStart"
                             android:textColor="@color/black"
                             android:textSize="16sp"
-                            style="@style/SetPoppinsRegularFont"
                             android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/select_btn_first_slot"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/plan_unselect_btn_bg_shape"
                             android:paddingStart="12dp"
                             android:paddingTop="4dp"
-                            android:visibility="visible"
                             android:paddingEnd="12dp"
                             android:paddingBottom="4dp"
-                            android:layout_marginStart="8dp"
-                            android:tag="01:00 P.M - 01.30 P.M"
+                            android:tag="12:30 P.M - 01.00 P.M"
                             android:text="@string/select"
                             android:textAllCaps="true"
-                            android:background="@drawable/plan_unselect_btn_bg_shape"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="visible" />
                     </LinearLayout>
 
 
                 </RelativeLayout>
-
-
-
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_marginTop="12dp"
                     android:orientation="horizontal">
+
                     <TextView
+                        style="@style/SetPoppinsRegularFont"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:layout_marginStart="2dp"
-                        android:text="Slot - 2"
-                        android:layout_centerInParent="true"
                         android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:padding="4dp"
+                        android:paddingEnd="8dp"
+                        android:text="Slot - 2"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        style="@style/SetPoppinsRegularFont"
                         android:textStyle="bold" />
 
 
@@ -265,64 +262,65 @@
                         android:id="@+id/select_btn_two_slot_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginEnd="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
                         android:layout_centerInParent="true"
-                        android:paddingBottom="4dp"
-                        android:background="@drawable/duration_btn_bg_shape">
+                        android:background="@drawable/duration_btn_bg_shape"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="4dp">
+
                         <TextView
+                            style="@style/SetPoppinsRegularFont"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="4dp"
                             android:layout_marginStart="2dp"
+                            android:padding="4dp"
                             android:text="01:00 P.M - 01.30 P.M"
                             android:textAlignment="textStart"
                             android:textColor="@color/black"
                             android:textSize="16sp"
-                            style="@style/SetPoppinsRegularFont"
                             android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/select_btn_two_slot"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/plan_unselect_btn_bg_shape"
                             android:paddingStart="12dp"
                             android:paddingTop="4dp"
-                            android:visibility="visible"
                             android:paddingEnd="12dp"
                             android:paddingBottom="4dp"
-                            android:layout_marginStart="8dp"
                             android:tag="01:00 P.M - 01.30 P.M"
                             android:text="@string/select"
                             android:textAllCaps="true"
-                            android:background="@drawable/plan_unselect_btn_bg_shape"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="visible" />
                     </LinearLayout>
 
 
                 </RelativeLayout>
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_marginTop="12dp"
                     android:orientation="horizontal">
+
                     <TextView
+                        style="@style/SetPoppinsRegularFont"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:layout_marginStart="2dp"
-                        android:text="Slot - 3"
-                        android:layout_centerInParent="true"
                         android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:padding="4dp"
+                        android:paddingEnd="8dp"
+                        android:text="Slot - 3"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        style="@style/SetPoppinsRegularFont"
                         android:textStyle="bold" />
 
 
@@ -331,12 +329,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_marginEnd="12dp"
                         android:background="@drawable/duration_btn_bg_shape"
                         android:orientation="horizontal"
-                        android:paddingStart="8dp"
+                        android:paddingStart="6dp"
                         android:paddingTop="4dp"
-                        android:paddingEnd="16dp"
+                        android:paddingEnd="10dp"
                         android:paddingBottom="4dp">
 
                         <TextView
@@ -371,6 +368,8 @@
 
 
                 </RelativeLayout>
+
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -381,7 +380,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:layout_marginStart="2dp"
+                        android:paddingEnd="8dp"
                         android:text="Slot - 4"
                         android:layout_alignParentStart="true"
                         android:layout_centerInParent="true"
@@ -397,10 +396,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginEnd="12dp"
                         android:paddingTop="4dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="16dp"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="10dp"
                         android:layout_centerInParent="true"
                         android:paddingBottom="4dp"
                         android:background="@drawable/duration_btn_bg_shape">
@@ -408,7 +406,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="4dp"
-                            android:layout_marginStart="2dp"
                             android:text="02:00 P.M - 02.30 P.M"
                             android:textAlignment="textStart"
                             android:textColor="@color/black"
@@ -436,8 +433,6 @@
 
                 </RelativeLayout>
             </LinearLayout>
-
-
         </RelativeLayout>
 
 

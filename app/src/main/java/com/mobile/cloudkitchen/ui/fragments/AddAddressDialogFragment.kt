@@ -12,6 +12,7 @@ import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.databinding.AddAddressBottomsheetBinding
 import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
+import com.mobile.cloudkitchen.utils.AppUtils
 import com.mobile.cloudkitchen.utils.UserUtils
 import org.json.JSONObject
 
@@ -81,8 +82,7 @@ class AddAddressDialogFragment(fragment: LocationFragment, mAddress: Addresses?)
     }
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {
-        Toast.makeText(requireActivity(), error.message, Toast.LENGTH_LONG)
-            .show()
+        AppUtils.showErrorMsg(error, tag.toString() , requireActivity())
     }
 
     fun editAddress(address: Addresses) {

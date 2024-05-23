@@ -11,6 +11,14 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import com.android.volley.AuthFailureError
+import com.android.volley.ClientError
+import com.android.volley.NetworkError
+import com.android.volley.NoConnectionError
+import com.android.volley.ParseError
+import com.android.volley.ServerError
+import com.android.volley.TimeoutError
+import com.android.volley.VolleyError
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.PendingResult
 import com.google.android.gms.common.api.Status
@@ -28,6 +36,7 @@ import com.mobile.cloudkitchen.data.model.UserAddress
 import com.mobile.cloudkitchen.data.model.WeeklyMenu
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
 import org.greenrobot.eventbus.EventBus
+import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -185,5 +194,69 @@ object AppUtils {
         val c: Date = Calendar.getInstance().getTime()
         val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         return df.format(c)
+    }
+    fun showErrorMsg(error: VolleyError, tag: String?, activity: Activity) {
+        var mTag = tag
+        try {
+            val json = JSONObject(String(error.networkResponse.data, charset("UTF-8")))
+            if (json.has("message")) {
+               mTag = mTag.plus(json.getString("message")+"$mTag")
+            }
+        } catch (e: Exception) {
+            showToast(
+                activity,
+                "e.message$mTag"
+            )
+        }
+        mTag = "${"-"}"+mTag.plus(error.networkResponse.statusCode)
+
+        if (error is ClientError) {
+            showToast(activity, error.message.toString() + "$mTag")
+        } else if (error is NetworkError) {
+            showToast(
+                activity,
+                "NetworkError!$mTag"
+            )
+        } else if (error is ServerError) {
+            showToast(
+                activity,
+                "ServerError!$mTag"
+            )
+        } else if (error is AuthFailureError) {
+            showToast(
+                activity,
+                "AuthFailureError!$mTag")
+        } else if (error is ParseError) {
+            showToast(
+                activity,
+                "ParseError!$mTag")
+        } else if (error is NoConnectionError) {
+            showToast(
+                activity,
+                "NoConnectionError!$mTag")
+        } else if (error is TimeoutError) {
+            showToast(
+                activity,
+                "Oops. Timeout error!$mTag")
+        } else if (error is ClientError) {
+            showToast(
+                activity,
+                "Oops. ClientError!$mTag")
+        } else if(error is VolleyError){
+            showToast(
+                activity,
+                "Oops. VolleyError!$mTag")
+        }else{
+            showToast(
+                activity,
+                "${error.message}$mTag")
+        }
+    }
+     fun showToast(activity: Activity, msg:String){
+        Toast.makeText(
+            activity,
+            msg,
+            Toast.LENGTH_LONG
+        ).show();
     }
 }

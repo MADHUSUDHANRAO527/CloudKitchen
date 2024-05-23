@@ -198,8 +198,7 @@ class LocationFragment : Fragment(),ServiceResponse, AddressAdapter.AdapterCallb
     }
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {
-        Toast.makeText(requireActivity(), error.message, Toast.LENGTH_LONG)
-            .show()
+        AppUtils.showErrorMsg(error, tag .toString(), requireActivity())
     }
 
     override fun onItemClicked(position: Int) {

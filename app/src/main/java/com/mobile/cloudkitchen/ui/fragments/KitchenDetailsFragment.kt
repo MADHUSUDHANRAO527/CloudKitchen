@@ -28,6 +28,7 @@ import com.mobile.cloudkitchen.data.viewmodels.KitchenDetailsVM
 import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
+import com.mobile.cloudkitchen.utils.AppUtils
 import com.mobile.cloudkitchen.utils.UserUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -72,7 +73,7 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse {
         if (kitchenType?.contains("non") == true)
             binding.nonvegCard.visibility = View.VISIBLE
 
-        kitchenDetailsViewModel.callKitchenDetails()
+       // kitchenDetailsViewModel.callKitchenDetails()
 
         APIService.makeKitchenDetailsAPICall(
             requireActivity(),
@@ -129,61 +130,7 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse {
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {
         _binding?.pBar?.visibility = View.GONE
-        if (error is ClientError) {
-            var msg = (JSONObject(
-                String(
-                    error.networkResponse.data,
-                    charset("UTF-8")
-                )
-            ).getString("error"))
-            Toast.makeText(
-                requireActivity(),
-                msg,
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is NetworkError) {
-            Toast.makeText(
-                requireActivity(),
-                "NetworkError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ServerError) {
-            Toast.makeText(
-                requireActivity(),
-                "ServerError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is AuthFailureError) {
-            Toast.makeText(
-                requireActivity(),
-                "AuthFailureError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ParseError) {
-            Toast.makeText(
-                requireActivity(),
-                "ParseError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is NoConnectionError) {
-            Toast.makeText(
-                requireActivity(),
-                "NoConnectionError!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is TimeoutError) {
-            Toast.makeText(
-                requireActivity(),
-                "Oops. Timeout error!",
-                Toast.LENGTH_LONG
-            ).show();
-        } else if (error is ClientError) {
-            Toast.makeText(
-                requireActivity(),
-                "Oops. ClientError",
-                Toast.LENGTH_LONG
-            ).show();
-        }
+        AppUtils.showErrorMsg(error= VolleyError(),tag = String(),requireActivity())
     }
 
     override fun onStop() {

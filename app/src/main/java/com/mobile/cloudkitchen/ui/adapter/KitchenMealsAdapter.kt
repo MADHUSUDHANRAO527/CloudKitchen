@@ -19,7 +19,7 @@ import org.greenrobot.eventbus.EventBus
 
 class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Kitchen) :
     RecyclerView.Adapter<KitchenMealsAdapter.ViewHolder>() {
-    private var selectedPos : Int = 0
+    private var selectedPos: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View = LayoutInflater
@@ -34,25 +34,27 @@ class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Ki
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //  var amount: TextView
-        lateinit var mealsImage: ImageView
-        lateinit var kitchenTitle: TextView
-        lateinit var kitchenDesc: TextView
-        lateinit var rating: RatingBar
-        lateinit var wkly_sub_price_txt: TextView
-        lateinit var monthly_sub_price_txt: TextView
-      lateinit  var kitchenCardView : CardView
-      lateinit  var addedTxt : TextView
+        var mealsImage: ImageView
+        var kitchenTitle: TextView
+        var kitchenDesc: TextView
+        var rating: RatingBar
+        var wkly_sub_price_txt: TextView
+        var monthly_sub_price_txt: TextView
+        var kitchenCardView: CardView
+        var addedTxt: TextView
+
         init {
             mealsImage = view.findViewById(R.id.meals_image)
             kitchenTitle = view.findViewById(R.id.meal_title_txt)
             kitchenDesc = view.findViewById(R.id.meal_title_desc)
             rating = view.findViewById(R.id.meal_rating)
-            wkly_sub_price_txt =view.findViewById(R.id.wkly_sub_price_txt)
+            wkly_sub_price_txt = view.findViewById(R.id.wkly_sub_price_txt)
             monthly_sub_price_txt = view.findViewById(R.id.monthly_sub_price_txt)
             kitchenCardView = view.findViewById(R.id.kitchen_card_view)
             addedTxt = view.findViewById(R.id.added_btn)
-            if (adapterPosition == 0)
+           /* if (adapterPosition == 0) {
                 addedTxt.visibility = View.VISIBLE
+            }*/
         }
     }
 
@@ -81,15 +83,17 @@ class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Ki
             kitchen.meals[position].monthlySubscriptionCost.toString() + " " + mContext.resources.getString(
                 R.string.Rs
             ) + "/Meal"
-        if (position == selectedPos)
+        if (position == selectedPos) {
             holder.addedTxt.visibility = View.VISIBLE
-        else
+            UserUtils.mealID = kitchen.meals[position].Id!!
+        } else
             holder.addedTxt.visibility = View.GONE
 
         holder.kitchenCardView.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("tag", "KitchenDetailsFragment")
             UserUtils.setKitchen(kitchen)
+            UserUtils.mealID = kitchen.meals[position].Id!!
             EventBus.getDefault().postSticky(kitchen.meals[position])
             selectedPos = position
             notifyDataSetChanged()
