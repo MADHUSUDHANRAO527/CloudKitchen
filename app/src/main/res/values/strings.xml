@@ -57,7 +57,7 @@
     <string name="grand_total">Grand Total</string>
     <string name="com.crashlytics.android.build_id">1</string>
     <string name="cost_efficient">Cost-Efficient</string>
-    <string name="enter_address_details">Enter Address Details</string>
+    <string name="enter_address_details">Enter complete address</string>
     <string name="full_name">Full Name</string>
     <string name="enter_full_name">Enter your full name</string>
     <string name="enter_phone_number">Enter phone number</string>
@@ -73,4 +73,11 @@
     <string name="view_menu">View Menu</string>
     <string name="slot_1">Slot - 1</string>
     <string name="view_order">View Order</string>
+    <string name="subscription_cost">Subscription Cost</string>
+    <string name="save_address_as">Save address as *</string>
+    <string name="work">Work</string>
+    <string name="hotel">Hotel</string>
+    <string name="other">Other</string>
+    <string name="add_other_type">Add other type</string>
+    <string name="no_address_found">No address are added, please add you address to continue!</string>
 </resources>

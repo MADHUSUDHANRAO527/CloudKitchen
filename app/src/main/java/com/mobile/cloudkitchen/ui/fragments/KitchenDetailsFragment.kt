@@ -6,21 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.AuthFailureError
-import com.android.volley.ClientError
-import com.android.volley.NetworkError
-import com.android.volley.NoConnectionError
-import com.android.volley.ParseError
-import com.android.volley.ServerError
-import com.android.volley.TimeoutError
 import com.android.volley.VolleyError
 import com.example.example.Kitchen
+import com.example.example.Meals
+import com.example.example.User
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.mobile.cloudkitchen.ui.adapter.KitchenMealsAdapter
 import com.mobile.cloudkitchen.databinding.FragmentKitchenDetailsBinding
 import com.mobile.cloudkitchen.data.model.MealsModel
@@ -33,13 +28,10 @@ import com.mobile.cloudkitchen.utils.UserUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
 
-class KitchenDetailsFragment : Fragment(), ServiceResponse {
+class KitchenDetailsFragment : Fragment(), ServiceResponse,KitchenMealsAdapter.AdapterCallback {
     private var _binding: FragmentKitchenDetailsBinding? = null
     private val binding get() = _binding!!
     private var mealsModelList = ArrayList<MealsModel>()
@@ -79,15 +71,11 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse {
             requireActivity(),
             this,
             "kitchens/$kitchenId",
-            sp.getString("TOKEN", "NA")
         )
         _binding!!.viewPlanLayout.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("kitchen_id", kitchenId)
-            bundle.putString("meal_id", mealId)
-            bundle.putString("month", monthSubAmount)
-            bundle.putString("wk", wkSubAmount)
-            (requireActivity() as HomeActivity?)?.loadFragment(SelectPlanFragment(), bundle)
+             UserUtils.monthlyAmount = monthSubAmount
+             UserUtils.wklyAmount = wkSubAmount
+            (requireActivity() as HomeActivity?)?.loadFragment(SelectPlanFragment(), null)
         }
         _binding?.backIcon?.setOnClickListener {
             (activity as HomeActivity?)?.popBack()
@@ -99,30 +87,38 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse {
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity?)?.showHideBottomNavigation(false, false)
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this)
-
     }
-
 
     override fun onSuccessResponse(response: Any?, tag: Any?) {
         _binding?.pBar?.visibility = View.GONE
         if (tag.toString().contains("kitchens")) {
             var jsonObject = JSONObject(response as String)
             val gson = Gson()
-            val kitchen: Kitchen = gson.fromJson(
-                response.toString(),
-                Kitchen::class.java
-            )
-            mealId = kitchen.Id.toString()
-            monthSubAmount = kitchen.meals[0].monthlySubscriptionCost.toString()
-            wkSubAmount = kitchen.meals[0].weeklySubscriptionCost.toString()
-            GlobalScope.launch(Dispatchers.Main) {
-                UserUtils.setKitchen(kitchen)
-                kitchenMealsAdapter = KitchenMealsAdapter(requireActivity(), kitchen)
-                binding.rvMeals.adapter = kitchenMealsAdapter
-                binding.selectedMealTxt.text = kitchen.meals[0].name
-                binding.viewPlanLayout.isClickable = true
+            var kitchen = Kitchen()
+            try {
+                kitchen = gson.fromJson(
+                    response.toString(),
+                    Kitchen::class.java
+                )
+            } catch (e: JsonSyntaxException) {
+                AppUtils.showToast(requireActivity(), e.message.toString()+"-response from server side!")
+                binding.viewPlanLayout.visibility = View.GONE
+                return
+            }
+            if (kitchen.Id != null&&kitchen.meals.isNotEmpty()) {
+                mealId = kitchen.Id.toString()
+                monthSubAmount = kitchen.meals[0].monthlySubscriptionCost.toString()
+                wkSubAmount = kitchen.meals[0].weeklySubscriptionCost.toString()
+             //   GlobalScope.launch(Dispatchers.Main) {
+                    UserUtils.setKitchen(kitchen)
+                    kitchenMealsAdapter = KitchenMealsAdapter(requireActivity(), kitchen,this)
+                    binding.rvMeals.adapter = kitchenMealsAdapter
+                    binding.selectedMealTxt.text = kitchen.meals[0].name
+                    binding.viewPlanLayout.isClickable = true
+             //   }
+            }else{
+                AppUtils.showToast(requireActivity(),"No meals found for this kitchen!")
+                binding.viewPlanLayout.visibility = View.GONE
             }
         }
     }
@@ -136,14 +132,13 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse {
     override fun onStop() {
         super.onStop()
         (activity as HomeActivity?)?.showHideBottomNavigation(true, true)
-        EventBus.getDefault().unregister(this)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(mealsModel: MealsModel) {
-        this.mealId = mealsModel._id
-        binding.selectedMealTxt.text = mealsModel.title
-        monthSubAmount = mealsModel.monthlySubscriptionPrice.toString()
-        wkSubAmount = mealsModel.wklySubscriptionPrice.toString()
+
+    override fun itemClick(mealsModel: Meals) {
+        this.mealId = mealsModel.Id.toString()
+        binding.selectedMealTxt.text = mealsModel.name
+        monthSubAmount = mealsModel.monthlySubscriptionCost.toString()
+        wkSubAmount = mealsModel.weeklySubscriptionCost.toString()
     }
 }

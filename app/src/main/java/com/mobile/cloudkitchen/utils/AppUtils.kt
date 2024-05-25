@@ -11,6 +11,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.android.volley.AuthFailureError
 import com.android.volley.ClientError
 import com.android.volley.NetworkError
@@ -106,27 +107,18 @@ object AppUtils {
         }
 
     }
+    /*fun  permissionsGranted() : Boolean{
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+    }*/
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun getLocation(activity: Activity){
 
         var fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
 
-        if (ActivityCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+          //  permissionRequest.launch(locationPermissions)
+
         }
         fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, object : CancellationToken() {
             override fun onCanceledRequested(p0: OnTokenCanceledListener) = CancellationTokenSource().token
@@ -151,8 +143,8 @@ object AppUtils {
                                             val userAddress = loadUserAddress(address, lat, long)
                                             //use userAddress :)
                                         //    selectedAddress = userAddress.area!!
-                                           val array = userAddress.fullAddressLine!!.split(",")
-                                            EventBus.getDefault().postSticky(array[0]+","+array[1])
+                                         //  val array = userAddress.fullAddressLine!!
+                                            EventBus.getDefault().postSticky("Home"+"*"+userAddress.fullAddressLine!!)
                                             (activity as HomeActivity?)?.popBack()
                                         }
                                     })
@@ -179,7 +171,7 @@ object AppUtils {
             }
 
     }
-    private fun loadUserAddress(address: Address, lat: Double, lng: Double): UserAddress {
+    fun loadUserAddress(address: Address, lat: Double, lng: Double): UserAddress {
         return UserAddress(
             postcode = address.postalCode,
             fullAddressLine = address.getAddressLine(0),
@@ -208,10 +200,12 @@ object AppUtils {
                 "e.message$mTag"
             )
         }
-        mTag = "${"-"}"+mTag.plus(error.networkResponse.statusCode)
+        error.networkResponse?.statusCode?.let {
+            mTag = "${"-"}" + mTag.plus(error.networkResponse.statusCode)
+        }
 
         if (error is ClientError) {
-            showToast(activity, error.message.toString() + "$mTag")
+            showToast(activity, "Error:" + error.message.toString() + "/$mTag")
         } else if (error is NetworkError) {
             showToast(
                 activity,

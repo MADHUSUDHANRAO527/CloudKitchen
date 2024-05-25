@@ -246,7 +246,6 @@ object APIService {
         mContext: Context,
         listener: ServiceResponse?,
         tag: String,
-        token: String?
     ) {
         Log.d("URL:", DOMAIN + "/$tag")
         val queue = Volley.newRequestQueue(mContext)
@@ -266,43 +265,48 @@ object APIService {
                 }) {
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
-                    headers["Authorization"] = "Bearer " + token.toString()
+                    headers["Authorization"] = "Bearer " + UserUtils.getUserToken(mContext)
                     return headers
                 }
             }
         queue.add(stringRequest)
     }
 
-    fun addUserAddress(
+    fun addEditDeleteUserAddress(
         mContext: Activity,
         tag: String,
         listener: ServiceResponse?,
-        address: Addresses
+        address: Addresses,isDelete: Boolean
     ) {
         Log.d("URL:", DOMAIN + "/users/${UserUtils.getUserID(mContext)}")
         val jsonAdd = JSONObject()
         val jsonAddress = JSONObject()
         var jsonAddressArray = JSONArray()
-
-
         val gson = Gson()
-        if (UserUtils.getUserInfo().addresses.isNotEmpty())
+        if(isDelete){
+            UserUtils.getUserInfo().addresses.remove(address)
             jsonAddressArray = JSONArray(gson.toJson(UserUtils.getUserInfo().addresses))
-
-
-        try {
-            jsonAddress.put("houseNo", address.houseNo)
-            jsonAddress.put("addressLine1", address.addressLine1)
-            jsonAddress.put("addressLine2", address.addressLine2)
-            jsonAddress.put("city", address.city)
-            jsonAddress.put("state", address.state)
-            jsonAddress.put("pincode", address.pincode)
-            jsonAddress.put("country", address.country)
-            jsonAddressArray.put(jsonAddress)
-            jsonAdd.put("addresses", jsonAddressArray)
-        } catch (e: JSONException) {
-            e.printStackTrace()
+        }else {
+            if (UserUtils.getUserInfo().addresses.isNotEmpty())
+                jsonAddressArray = JSONArray(gson.toJson(UserUtils.getUserInfo().addresses))
+            try {
+                jsonAddress.put("type", address.type)
+                jsonAddress.put("fullName", address.fullName)
+                jsonAddress.put("phoneNumber", address.phoneNumber)
+                jsonAddress.put("houseNo", address.houseNo)
+                jsonAddress.put("addressLine1", address.addressLine1)
+                jsonAddress.put("addressLine2", address.addressLine2)
+                jsonAddress.put("city", address.city)
+                jsonAddress.put("state", address.state)
+                jsonAddress.put("pincode", address.pincode)
+                jsonAddress.put("country", address.country)
+                jsonAddressArray.put(jsonAddress)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
+        jsonAdd.put("addresses", jsonAddressArray)
+
         val jsonObjectRequest =
             object : JsonObjectRequest(Method.PUT,
                 DOMAIN + "/users/${UserUtils.getUserID(mContext)}", jsonAdd,

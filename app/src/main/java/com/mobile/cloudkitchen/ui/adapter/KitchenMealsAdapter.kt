@@ -13,14 +13,19 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.example.Kitchen
+import com.example.example.Meals
 import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.utils.UserUtils
-import org.greenrobot.eventbus.EventBus
+import kotlinx.coroutines.CoroutineScope
 
-class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Kitchen) :
+class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Kitchen, mCallBack: AdapterCallback) :
     RecyclerView.Adapter<KitchenMealsAdapter.ViewHolder>() {
     private var selectedPos: Int = 0
+    var callback: AdapterCallback? = mCallBack
 
+    interface AdapterCallback{
+        fun itemClick(meals: Meals)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View = LayoutInflater
             .from(parent.context)
@@ -86,6 +91,7 @@ class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Ki
         if (position == selectedPos) {
             holder.addedTxt.visibility = View.VISIBLE
             UserUtils.mealID = kitchen.meals[position].Id!!
+            UserUtils.setMeal(kitchen.meals[position])
         } else
             holder.addedTxt.visibility = View.GONE
 
@@ -94,7 +100,9 @@ class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Ki
             bundle.putString("tag", "KitchenDetailsFragment")
             UserUtils.setKitchen(kitchen)
             UserUtils.mealID = kitchen.meals[position].Id!!
-            EventBus.getDefault().postSticky(kitchen.meals[position])
+            UserUtils.setMeal(kitchen.meals[position])
+            callback?.itemClick(kitchen.meals[position])
+          //  EventBus.getDefault().postSticky(kitchen.meals[position])
             selectedPos = position
             notifyDataSetChanged()
         }

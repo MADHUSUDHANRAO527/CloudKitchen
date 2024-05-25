@@ -22,7 +22,9 @@ import com.android.volley.ParseError
 import com.android.volley.ServerError
 import com.android.volley.TimeoutError
 import com.android.volley.VolleyError
+import com.google.gson.Gson
 import com.mobile.cloudkitchen.R
+import com.mobile.cloudkitchen.data.model.UserInfo
 import com.mobile.cloudkitchen.databinding.ActivityOtpBinding
 import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
@@ -192,7 +194,6 @@ class OTPActivity : AppCompatActivity(), ServiceResponse {
                 Toast.makeText(this, "Incorrect OTP " + otp, Toast.LENGTH_SHORT).show()
             else {
                 binding.otpPBar.visibility =View.VISIBLE
-                Toast.makeText(this,  otp, Toast.LENGTH_SHORT).show()
                 APIService.makeVerifyOTPRequest(
                     applicationContext,
                     "VERIFYOTP",
@@ -232,8 +233,9 @@ class OTPActivity : AppCompatActivity(), ServiceResponse {
         binding.otpPBar.visibility =View.GONE
         if(tag.toString().contentEquals("VERIFYOTP")) {
             if (response is JSONObject) {
-                var json = response as JSONObject
-                var dataJson = json.getJSONObject("data")
+                val json = response
+                val dataJson = json.getJSONObject("data")
+                editor.putString("USER_INFO",dataJson.toString())
                 editor.putString("MOBILE_NUMBER", dataJson.getString("mobileNumber"));
                 editor.putString("USERID", dataJson.getString("_id"));
                 editor.putBoolean("IS_APP_ADMIN", dataJson.getBoolean("isAppAdmin"));

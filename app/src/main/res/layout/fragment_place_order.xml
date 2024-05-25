@@ -22,19 +22,19 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/icon_close"/>
+
             <TextView
                 android:id="@+id/meal_title_txt"
+                style="@style/SetPoppinsRegularFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:layout_toEndOf="@+id/appLogo"
-                android:layout_marginStart="12dp"
-                style="@style/SetPoppinsRegularFont"
-                android:text="@string/select"
                 android:layout_centerInParent="true"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@+id/appLogo"
+                android:padding="4dp"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -79,13 +79,12 @@
                         android:textSize="18sp"/>
 
                         <TextView
-                            android:id="@+id/start_date_txt"
+                            android:id="@+id/address_txt"
                             style="@style/SetPoppinsRegularFont"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
                             android:padding="4dp"
-                            android:text="address"
                             android:textAlignment="textStart"
                             android:textColor="#818181"
                             android:textSize="16sp"
@@ -106,7 +105,7 @@
                         android:layout_height="50dp">
 
                         <TextView
-                            android:id="@+id/end_date_txt"
+                            android:id="@+id/change_address_txt"
                             style="@style/SetPoppinsRegularFont"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -134,29 +133,114 @@
 
             </LinearLayout>
 
-
-            <TextView
-                android:id="@+id/select_slot_txt"
+            <RelativeLayout
+                android:id="@+id/total_savings_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:text="@string/your_total_savings"
-                style="@style/SetPoppinsSemiBoldFont"
-                android:textAlignment="textStart"
-                android:layout_marginTop="18dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/total_saving_bg"
                 android:layout_below="@+id/date_layout"
-                android:textColor="#507FB1"
-                android:textSize="16sp"
+                android:layout_marginTop="18dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/total_saving_bg">
+
+                <TextView
+                    style="@style/SetPoppinsSemiBoldFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:padding="6dp"
+                    android:text="@string/your_total_savings"
+                    android:textAlignment="textStart"
+                    android:textColor="#507FB1"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/total_saving_txt"
+                    style="@style/SetPoppinsSemiBoldFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:padding="6dp"
+                    android:layout_alignParentEnd="true"
+                    android:text="325.34"
+                    android:textAlignment="textStart"
+                    android:textColor="#507FB1"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/meal_details_layout"
+            android:layout_below="@+id/total_savings_layout"
+            >
+
+
+            <TextView
+                android:id="@+id/meal_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="South Indian"
+                android:textSize="22sp"
+                style="@style/SetPoppinsSemiBoldFont"
+                android:padding="4dp"
+                android:textColor="@color/black"
+                android:textAlignment="center"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/meal_title_desc"
+                style="@style/SetPoppinsRegularFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/meal_title"
+                android:padding="4dp"
+                android:text="Idly.vada"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/plan_type_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/plan_btn_bg_shape"
+                android:gravity="end"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:layout_marginTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/weekly"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="visible" />
+            <TextView
+                android:id="@+id/meals_cost_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+               android:layout_below="@+id/plan_type_btn"
+                style="@style/SetPoppinsRegularFont"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="visible" />
+        </RelativeLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_below="@+id/select_slot_txt"
+                android:layout_below="@+id/meal_details_layout"
                 android:weightSum="3"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/shape_collection"
@@ -169,51 +253,6 @@
                     android:padding="4dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="South Indian"
-                        android:textSize="18sp"
-                        style="@style/SetPoppinsSemiBoldFont"
-                        android:padding="4dp"
-                        android:textColor="@color/black"
-                        android:textAlignment="center"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/meal_title_desc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:text="Idly.vada"
-                        style="@style/SetPoppinsRegularFont"
-                        android:padding="4dp"
-                        android:textColor="@color/black"
-                        />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-
-                        <TextView
-                            android:id="@+id/added_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:background="@drawable/plan_btn_bg_shape"
-                            android:gravity="end"
-                            android:layout_alignParentEnd="true"
-                            android:paddingStart="8dp"
-                            android:paddingTop="4dp"
-                            android:visibility="visible"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="4dp"
-                            android:text="@string/weekly"
-                            android:textAllCaps="true"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-                    </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -245,7 +284,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/plan_duration"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:padding="4dp"
                                 style="@style/SetPoppinsRegularFont"
                                 android:textColor="@color/black"
@@ -255,7 +294,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/delivery_slot"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:padding="4dp"
                                 style="@style/SetPoppinsRegularFont"
                                 android:textColor="@color/black"
@@ -269,6 +308,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
                             <TextView
+                                android:id="@+id/change_duration_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -278,21 +318,23 @@
                                 android:textColor="@color/colorPrimaryDark"
                                 />
                             <TextView
+                                android:id="@+id/plan_duration_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="10 april "
                                 style="@style/SetPoppinsRegularFont"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:padding="4dp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
                                  />
                             <TextView
+                                android:id="@+id/delivery_slot_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="12:30pm"
                                 style="@style/SetPoppinsRegularFont"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:padding="4dp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -319,6 +361,7 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
                             <TextView
+                                android:id="@+id/subscription_type_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -326,6 +369,16 @@
                                 android:text="@string/monthly_subscription"
                                 android:padding="4dp"
                                 android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/subscription_cost"
+                                android:textSize="18sp"
+                                android:padding="4dp"
+                                style="@style/SetPoppinsRegularFont"
+                                android:textColor="@color/black"
+                                android:textAlignment="center"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -343,6 +396,7 @@
                                 android:text="@string/grand_total"
                                 android:textSize="18sp"
                                 android:padding="4dp"
+                                android:textStyle="bold"
                                 style="@style/SetPoppinsRegularFont"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -355,7 +409,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
                             <TextView
-                                android:id="@+id/monthly_sub_txt"
+                                android:id="@+id/change_subscription"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -365,9 +419,10 @@
                                 android:textColor="@color/colorPrimaryDark"
                                 />
                             <TextView
+                                android:id="@+id/subscription_cost_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="10 april "
+                                android:text="237"
                                 style="@style/SetPoppinsRegularFont"
                                 android:textSize="18sp"
                                 android:padding="4dp"
@@ -375,9 +430,21 @@
                                 android:textAlignment="center"
                                 />
                             <TextView
+                                android:id="@+id/delivery_charges_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="12:30pm"
+                                android:text="420"
+                                style="@style/SetPoppinsRegularFont"
+                                android:textSize="18sp"
+                                android:padding="4dp"
+                                android:textColor="@color/black"
+                                android:textAlignment="center"
+                                />
+                            <TextView
+                                android:id="@+id/grand_total_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="237"
                                 style="@style/SetPoppinsRegularFont"
                                 android:textSize="18sp"
                                 android:padding="4dp"
@@ -393,58 +460,7 @@
                         android:layout_height="2dp"
                         android:layout_marginTop="10dp"
                         android:background="#c0c0c0"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="2"
-                        android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="14sp"
-                                style="@style/SetPoppinsRegularFont"
-                                android:text="@string/subscription"
-                                android:padding="4dp"
-                                android:textColor="@color/black"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/plan_duration"
-                                android:textSize="18sp"
-                                android:padding="4dp"
-                                style="@style/SetPoppinsRegularFont"
-                                android:textColor="@color/black"
-                                android:textAlignment="center"
-                                />
-
-
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="14sp"
-                                style="@style/SetPoppinsRegularFont"
-                                android:text="@string/change"
-                                android:padding="4dp"
-                                android:textColor="@color/colorPrimaryDark"
-                                />
-
-
-
-                        </LinearLayout>
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -457,7 +473,7 @@
 
 
     <Button
-        android:id="@+id/place_order_btn"
+        android:id="@+id/paynow_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="34dp"
@@ -477,6 +493,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:indeterminate="true"
+        android:visibility="gone"
         android:indeterminateTint="@color/gold"
         android:indeterminateTintMode="src_atop" />
 </RelativeLayout>

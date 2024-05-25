@@ -1,10 +1,8 @@
 package com.mobile.cloudkitchen.ui.fragments
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,9 +44,9 @@ class SelectDurationFragment : Fragment() {
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
         val args = arguments
-        val kitchenId = args?.getString("kitchen_id", "0")
+      /*  val kitchenId = args?.getString("kitchen_id", "0")
         val mealId = args?.getString("meal_id", "0")
-        planType = args?.getString("plan_type").toString()
+*/        planType = args?.getString("plan_type").toString()
         val monthSubAmount = args?.getString("month", "")
         val wkSubAmount = args?.getString("wk", "")
         if(planType.contains("M")){
@@ -115,8 +113,8 @@ class SelectDurationFragment : Fragment() {
 
         _binding!!.placeOrderBtn.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("kitchen_id", kitchenId)
-            bundle.putString("meal_id", mealId)
+            bundle.putString("kitchen_id", UserUtils.getKitchen().Id)
+            bundle.putString("meal_id", UserUtils.mealID)
             bundle.putString("plan_type", planType)
             (requireActivity() as HomeActivity?)?.loadFragment(ViewMenuFragment(), bundle)
         }
@@ -146,10 +144,6 @@ class SelectDurationFragment : Fragment() {
             else
                 selectedEndDate.set(year, month + 1, dayOfMonth)
 
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
-            val cal_Two: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-            println(cal_Two.time)
-
             // set this date in TextView for Display
             if(startDate) {
                 binding.startDateTxt.text = Date
@@ -171,14 +165,27 @@ class SelectDurationFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show();
             }else{
-                val startDate = Date( selectedStartDate.timeInMillis)
-                val endDate = Date( selectedStartDate.timeInMillis)
+                //prepare UTC  format
                 val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-                 val startSimpleDateFormat =simpleDateFormat.format(startDate)
-                 val endSimpleDateFormat =simpleDateFormat.format(endDate)
-                UserUtils.fromDate = startSimpleDateFormat
-                UserUtils.toDate = endSimpleDateFormat
+                //prepare human readable format --31 May 2024
+                val sdf = SimpleDateFormat("dd MMMM yyyy ")
+                val calendar = Calendar.getInstance()
+                calendar[year, month] = dayOfMonth
+                if (startDate) {
+                    val startDate = Date(selectedStartDate.timeInMillis)
+                    val startSimpleDateFormat = simpleDateFormat.format(startDate)
+                    UserUtils.fromDate = startSimpleDateFormat
+                    //store human readable format --31 May 2024
+                    val sDate = sdf.format(calendar.time)
+                    UserUtils.fromHumanDate = sDate
+                } else {
+                    val endDate = Date(selectedEndDate.timeInMillis)
+                    val endSimpleDateFormat = simpleDateFormat.format(endDate)
+                    UserUtils.toDate = endSimpleDateFormat
+                    val eDate = sdf.format(calendar.time)
+                    UserUtils.toHumanDate = eDate
+                }
                 alertDialog?.dismiss()
             }
         }

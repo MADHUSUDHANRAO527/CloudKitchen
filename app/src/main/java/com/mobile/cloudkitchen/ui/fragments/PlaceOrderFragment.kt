@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
 import com.example.example.Kitchen
+import com.example.example.User
 import com.google.gson.Gson
+import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.data.viewmodels.KitchenDetailsVM
 import com.mobile.cloudkitchen.databinding.FragmentPlaceOrderBinding
 import com.mobile.cloudkitchen.service.APIService
@@ -27,8 +29,9 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 
-class PlaceOrderFragment : Fragment(),ServiceResponse {
+class PlaceOrderFragment : Fragment(), ServiceResponse {
     private var _binding: FragmentPlaceOrderBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     lateinit var sp: SharedPreferences
@@ -45,82 +48,54 @@ class PlaceOrderFragment : Fragment(),ServiceResponse {
         _binding = FragmentPlaceOrderBinding.inflate(inflater, container, false)
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
-        val args = arguments
-      /*  val kitchenId = args?.getString("kitchen_id", "0")
-        val mealId = args?.getString("meal_id", "0")
-        val monthSubAmount = args?.getString("month", "")
-        val wkSubAmount = args?.getString("wk", "")*/
+        binding.addressTxt.text = sp.getString("SELECTED_ADDRESS","Click here to add address!").toString().split("*")[1]
+        val onlyMealCost = requireActivity().resources.getString(R.string.Rs) + UserUtils.getReviewOrder().totalAmount.toString()
+        val mealsCostTxt =  onlyMealCost +
+                "(" + if (UserUtils.planType.contains("W")) UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() else UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()
+        val savedAmountTxt = requireActivity().resources.getString(R.string.Rs) + UserUtils.getReviewOrder().savedAmount.toString()
+        binding.planTypeBtn.text = if (UserUtils.planType.contains("W")) "WEEKLY" else "MONTHLY"
+        binding.mealsCostTxt.text = mealsCostTxt
+        binding.totalSavingTxt.text =savedAmountTxt
+        binding.subscriptionCostTxt.text = onlyMealCost
 
-        APIService.process(
-            requireActivity(),
-            this ,"/orders/processOrder"
-        )
+        binding.deliveryChargesTxt.text =
+            requireActivity().resources.getString(R.string.Rs) + "0.00"
+        binding.grandTotalTxt.text =
+            requireActivity().resources.getString(R.string.Rs) + UserUtils.getReviewOrder().grandTotal.toString()
+        binding.mealTitleTxt.text = UserUtils.getMeal().name
+        binding.mealTitle.text = UserUtils.getMeal().name
+        binding.mealTitleDesc.text = UserUtils.getMeal().description
+        binding.mealsCostTxt.text = onlyMealCost
 
-        _binding!!.placeOrderBtn.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("kitchen_id", UserUtils.getKitchen().Id)
-            bundle.putString("meal_id", UserUtils.mealID)
-            bundle.putString("plan_type", planType)
-            (requireActivity() as HomeActivity?)?.loadFragment(ViewMenuFragment(), bundle)
+        "${UserUtils.fromHumanDate}-${UserUtils.toHumanDate}".also { binding.planDurationTxt.text = it }
+        UserUtils.timeSlot.also { binding.deliverySlotTxt.text = it }
+        _binding!!.paynowBtn.setOnClickListener {
+            AppUtils.showToast(requireActivity(),"will navigate to payment screen!")
+        }
+        binding.changeDurationTxt.setOnClickListener {
+            (requireActivity() as HomeActivity?)?.loadFragment(SelectDurationFragment(), null)
+        }
+        binding.changeSubscription.setOnClickListener {
+            (requireActivity() as HomeActivity?)?.loadFragment(SelectPlanFragment(), null)
+        }
+        binding.changeAddressTxt.setOnClickListener {
+            (requireActivity() as HomeActivity?)?.loadFragment(LocationFragment(), null)
         }
 
         return root
     }
 
-    private fun showDatePopup(startDate: Boolean, endDate: Boolean) {
-        val li = LayoutInflater.from(context)
-        val promptsView: View = li.inflate(com.mobile.cloudkitchen.R.layout.calender_layout, null)
-
-        val alertDialogBuilder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(
-            context
-        )
-        val calender = promptsView
-            .findViewById<View>(com.mobile.cloudkitchen.R.id.calender) as CalendarView
-        alertDialogBuilder.setView(promptsView)
-        val alertDialog: android.app.AlertDialog? = alertDialogBuilder.create()
-
-        calender.setOnDateChangeListener { view, year, month, dayOfMonth ->  val Date = (dayOfMonth.toString() + "-"
-                + (month + 1) + "-" + year)
-
-            // set this date in TextView for Display
-            if(startDate) binding.startDateTxt.text = Date else if(endDate) binding.endDateTxt.text = Date
-            alertDialog?.dismiss()
-        }
-        alertDialogBuilder
-            .setCancelable(false)
-            .setPositiveButton("OK",
-                DialogInterface.OnClickListener { dialog, id -> // get user input and set it to result
-                })
-            .setNegativeButton("Cancel",
-                DialogInterface.OnClickListener { dialog, id -> dialog.cancel() })
-        alertDialog!!.show()
-    }
     override fun onSuccessResponse(response: Any?, tag: Any?) {
+        //{"totalAmount":0,"plannedDates":[],"discount":"10%","grandTotal":0,"savedAmount":0}
         _binding?.pBar?.visibility = View.GONE
         if (tag.toString().contains("kitchens")) {
-            var jsonObject = JSONObject(response as String)
-            val gson = Gson()
-            val kitchen: Kitchen = gson.fromJson(
-                response.toString(),
-                Kitchen::class.java
-            )
-           /* mealId = kitchen.Id.toString()
-            monthSubAmount = kitchen.meals[0].monthlySubscriptionCost.toString()
-            wkSubAmount = kitchen.meals[0].weeklySubscriptionCost.toString()
-            GlobalScope.launch(Dispatchers.Main) {
-                UserUtils.setKitchen(kitchen)
-                kitchenMealsAdapter = KitchenMealsAdapter(requireActivity(), kitchen)
-                binding.rvMeals.adapter = kitchenMealsAdapter
-                binding.selectedMealTxt.text = kitchen.meals[0].name
-                binding.viewPlanLayout.isClickable = true
-            }*/
+
         }
     }
-
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {
         _binding?.pBar?.visibility = View.GONE
-        AppUtils.showErrorMsg(error,tag.toString(),requireActivity())
+        AppUtils.showErrorMsg(error, tag.toString(), requireActivity())
     }
 
 }

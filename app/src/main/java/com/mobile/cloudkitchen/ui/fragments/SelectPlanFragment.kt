@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session.User
 import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.data.viewmodels.KitchenDetailsVM
 import com.mobile.cloudkitchen.databinding.FragmentSelectPlanBinding
@@ -36,13 +37,13 @@ class SelectPlanFragment : Fragment() {
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
         val args = arguments
-        val kitchenId = args?.getString("kitchen_id", "0")
+      /*  val kitchenId = args?.getString("kitchen_id", "0")
         val mealId = args?.getString("meal_id", "0")
         val monthSubAmount = args?.getString("month", "")
-        val wkSubAmount = args?.getString("wk", "")
+        val wkSubAmount = args?.getString("wk", "")*/
 
-        binding.wkMealPriceTxt.text = wkSubAmount
-        binding.monthlyMealPriceTxt.text = monthSubAmount
+        binding.wkMealPriceTxt.text = UserUtils.wklyAmount
+        binding.monthlyMealPriceTxt.text = UserUtils.monthlyAmount
         binding.monthlyNoOfmeals.text = "("+UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() + " Meals)"
         binding.noOfmeals.text = "("+UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()+" Meals)"
 
@@ -64,8 +65,8 @@ class SelectPlanFragment : Fragment() {
        // APIService.makeKitchenDetailsAPICall(requireActivity(), this, "kitchens/$kitchenId",sp.getString("TOKEN","NA"))
         _binding!!.selectMenuBtn.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("kitchen_id", kitchenId)
-            bundle.putString("meal_id", mealId)
+            bundle.putString("kitchen_id", UserUtils.getKitchen().Id)
+            bundle.putString("meal_id", UserUtils.mealID)
             bundle.putString("plan_type", planType)
             UserUtils.planType = planType
             (requireActivity() as HomeActivity?)?.loadFragment(SelectDurationFragment(), bundle)

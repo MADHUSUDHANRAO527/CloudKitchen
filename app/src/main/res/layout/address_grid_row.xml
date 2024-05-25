@@ -2,15 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <LinearLayout
+        android:id="@+id/address_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="18dp"
         android:layout_marginTop="18dp"
-        android:background="@drawable/edit_box"
+        android:background="@drawable/shape_collection"
         android:textCursorDrawable="@null"
         android:orientation="vertical"
         app:defaultQueryHint="@string/search"
@@ -37,12 +38,54 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:maxLines="2"
             android:layout_marginEnd="8dp"
             android:text="@string/home_address"
-            android:textAlignment="center"
+            android:textAlignment="viewStart"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:ellipsize="end"
+            android:textSize="18sp"
             android:textStyle="italic" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="14dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/edit_delete_layout"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/circle_shape">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerInParent="true"
+                    android:rotation="90"
+                    android:src="@drawable/three_dots"
+                    app:tint="@color/colorPrimaryDark" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/share_layout"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_shape">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_share"
+                    app:tint="@color/colorPrimaryDark" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
