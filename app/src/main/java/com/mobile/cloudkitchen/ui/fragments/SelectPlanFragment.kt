@@ -47,7 +47,7 @@ class SelectPlanFragment : Fragment() {
         binding.monthlyNoOfmeals.text = "("+UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() + " Meals)"
         binding.noOfmeals.text = "("+UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()+" Meals)"
 
-        planType = _binding!!.wklyPlan.tag.toString()
+        planType = _binding!!.monthlyPlan.tag.toString()
         _binding!!.wklyPlan.setOnClickListener {
             binding.wkSelectBtn.setBackground(ContextCompat.getDrawable(requireActivity(), R.drawable.plan_btn_bg_shape));
             binding.wkSelectBtn.setTextColor(ContextCompat.getColor(requireActivity(), R.color.white));

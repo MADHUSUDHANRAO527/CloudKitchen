@@ -1,6 +1,8 @@
 package com.mobile.cloudkitchen.ui.activity
 
+import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -16,12 +18,13 @@ import com.android.volley.VolleyError
 import com.mobile.cloudkitchen.databinding.ActivityLoginBinding
 import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
+import com.mobile.cloudkitchen.utils.AppUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class LoginActivity : AppCompatActivity(), ServiceResponse {
+class LoginActivity : BaseActivity(), ServiceResponse {
     lateinit var loginBinding: ActivityLoginBinding
     var listener: ServiceResponse? = this
 

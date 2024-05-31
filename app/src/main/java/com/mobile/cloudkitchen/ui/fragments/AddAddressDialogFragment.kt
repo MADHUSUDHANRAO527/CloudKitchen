@@ -61,20 +61,23 @@ class AddAddressDialogFragment(fragment: LocationFragment, mAddress: Addresses?)
         }
         binding.addAddressBtn.setOnClickListener {
             // APIService.addUserAddress()
-            if (binding.fullNameTxt.text.toString().isEmpty()) {
-                Toast.makeText(requireActivity(), "Enter full name", Toast.LENGTH_LONG)
+            if (binding.typeOfAddressTxt.tag == null) {
+                Toast.makeText(requireActivity(), "Please choose type of address!", Toast.LENGTH_LONG)
+                    .show()
+            } else if (binding.fullNameTxt.text.toString().isEmpty()) {
+                Toast.makeText(requireActivity(), "Enter full name!", Toast.LENGTH_LONG)
                     .show()
             } else if (binding.phNumEt.text.toString().isEmpty()) {
-                Toast.makeText(requireActivity(), "Enter phone number", Toast.LENGTH_LONG)
+                Toast.makeText(requireActivity(), "Enter phone number!", Toast.LENGTH_LONG)
                     .show()
             } else if (binding.buildingNameTxt.text.toString().isEmpty()) {
-                Toast.makeText(requireActivity(), "Enter building name/ No.", Toast.LENGTH_LONG)
+                Toast.makeText(requireActivity(), "Enter building name/ No.!", Toast.LENGTH_LONG)
                     .show()
             } else if (binding.areaTxt.text.toString().isEmpty()) {
                 Toast.makeText(requireActivity(), "Enter area!", Toast.LENGTH_LONG)
                     .show()
             } else if (binding.landmarkTxt.text.toString().isEmpty()) {
-                Toast.makeText(requireActivity(), "Enter Landmark", Toast.LENGTH_LONG)
+                Toast.makeText(requireActivity(), "Enter Landmark!", Toast.LENGTH_LONG)
                     .show()
             } else if (binding.zipcodeTxt.text.toString().isEmpty()) {
                 Toast.makeText(requireActivity(), "Enter zipcode!", Toast.LENGTH_LONG)
@@ -243,8 +246,6 @@ class AddAddressDialogFragment(fragment: LocationFragment, mAddress: Addresses?)
 
     override fun onSuccessResponse(response: Any?, tag: Any?) {
         val json = response as JSONObject
-        /*Toast.makeText(requireActivity(), json.get("message").toString(), Toast.LENGTH_LONG)
-            .show()*/
         mFragment.refreshAddress()
         dismiss()
     }

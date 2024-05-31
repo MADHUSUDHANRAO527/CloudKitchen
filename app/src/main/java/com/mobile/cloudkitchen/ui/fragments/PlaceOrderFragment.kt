@@ -15,6 +15,7 @@ import com.example.example.Kitchen
 import com.example.example.User
 import com.google.gson.Gson
 import com.mobile.cloudkitchen.R
+import com.mobile.cloudkitchen.data.model.ReviewOrder
 import com.mobile.cloudkitchen.data.viewmodels.KitchenDetailsVM
 import com.mobile.cloudkitchen.databinding.FragmentPlaceOrderBinding
 import com.mobile.cloudkitchen.service.APIService
@@ -27,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.lang.IndexOutOfBoundsException
 
 
 class PlaceOrderFragment : Fragment(), ServiceResponse {
@@ -48,16 +50,14 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         _binding = FragmentPlaceOrderBinding.inflate(inflater, container, false)
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
-        binding.addressTxt.text = sp.getString("SELECTED_ADDRESS","Click here to add address!").toString().split("*")[1]
-        val onlyMealCost = requireActivity().resources.getString(R.string.Rs) + UserUtils.getReviewOrder().totalAmount.toString()
-        val mealsCostTxt =  onlyMealCost +
-                "(" + if (UserUtils.planType.contains("W")) UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() else UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()
-        val savedAmountTxt = requireActivity().resources.getString(R.string.Rs) + UserUtils.getReviewOrder().savedAmount.toString()
-        binding.planTypeBtn.text = if (UserUtils.planType.contains("W")) "WEEKLY" else "MONTHLY"
-        binding.mealsCostTxt.text = mealsCostTxt
-        binding.totalSavingTxt.text =savedAmountTxt
-        binding.subscriptionCostTxt.text = onlyMealCost
-
+        try {
+            binding.deliverAtTxt.text = sp.getString("SELECTED_ADDRESS","Click here to add address!").toString().split("*")[0]
+            binding.addressTxt.text = sp.getString("SELECTED_ADDRESS","Click here to add address!").toString().split("*")[1]
+        }catch (e:IndexOutOfBoundsException){
+            binding.deliverAtTxt.text = "Add or Select Address!"
+            binding.addressTxt.text = sp.getString("SELECTED_ADDRESS","")
+            e.printStackTrace()
+        }
         binding.deliveryChargesTxt.text =
             requireActivity().resources.getString(R.string.Rs) + "0.00"
         binding.grandTotalTxt.text =
@@ -65,7 +65,7 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         binding.mealTitleTxt.text = UserUtils.getMeal().name
         binding.mealTitle.text = UserUtils.getMeal().name
         binding.mealTitleDesc.text = UserUtils.getMeal().description
-        binding.mealsCostTxt.text = onlyMealCost
+      //  binding.mealsCostTxt.text = onlyMealCost
 
         "${UserUtils.fromHumanDate}-${UserUtils.toHumanDate}".also { binding.planDurationTxt.text = it }
         UserUtils.timeSlot.also { binding.deliverySlotTxt.text = it }
@@ -82,15 +82,32 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
             (requireActivity() as HomeActivity?)?.loadFragment(LocationFragment(), null)
         }
 
+        APIService.process(
+            requireActivity(),
+            this, "/orders/processOrder"
+        )
         return root
     }
 
     override fun onSuccessResponse(response: Any?, tag: Any?) {
         //{"totalAmount":0,"plannedDates":[],"discount":"10%","grandTotal":0,"savedAmount":0}
-        _binding?.pBar?.visibility = View.GONE
-        if (tag.toString().contains("kitchens")) {
-
+        var gson = Gson()
+        if (tag.toString().contains("processOrder")) {
+            val processOrder: ReviewOrder = gson.fromJson(
+                response.toString(),
+                ReviewOrder::class.java
+            )
+            UserUtils.setReviewOrder(processOrder)
+            val onlyMealCost = requireActivity().resources.getString(R.string.Rs) + processOrder.totalAmount.toString()
+            val mealsCostTxt =  onlyMealCost +
+                    "(" + if (UserUtils.planType.contains("W")) UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() else UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()
+            val savedAmountTxt = requireActivity().resources.getString(R.string.Rs) + processOrder.savedAmount.toString()
+            binding.planTypeBtn.text = if (UserUtils.planType.contains("W")) "WEEKLY" else "MONTHLY"
+            binding.mealsCostTxt.text = mealsCostTxt
+            binding.totalSavingTxt.text =savedAmountTxt
+            binding.subscriptionCostTxt.text = onlyMealCost
         }
+        _binding?.pBar?.visibility = View.GONE
     }
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {

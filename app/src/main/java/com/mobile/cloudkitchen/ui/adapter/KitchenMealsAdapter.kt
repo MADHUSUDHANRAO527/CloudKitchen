@@ -16,7 +16,6 @@ import com.example.example.Kitchen
 import com.example.example.Meals
 import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.utils.UserUtils
-import kotlinx.coroutines.CoroutineScope
 
 class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Kitchen, mCallBack: AdapterCallback) :
     RecyclerView.Adapter<KitchenMealsAdapter.ViewHolder>() {
@@ -38,28 +37,25 @@ class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Ki
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //  var amount: TextView
         var mealsImage: ImageView
         var kitchenTitle: TextView
         var kitchenDesc: TextView
+        var ratingTxt: TextView
         var rating: RatingBar
         var wkly_sub_price_txt: TextView
         var monthly_sub_price_txt: TextView
         var kitchenCardView: CardView
         var addedTxt: TextView
-
         init {
             mealsImage = view.findViewById(R.id.meals_image)
             kitchenTitle = view.findViewById(R.id.meal_title_txt)
             kitchenDesc = view.findViewById(R.id.meal_title_desc)
             rating = view.findViewById(R.id.meal_rating)
+            ratingTxt = view.findViewById(R.id.rating_txt)
             wkly_sub_price_txt = view.findViewById(R.id.wkly_sub_price_txt)
             monthly_sub_price_txt = view.findViewById(R.id.monthly_sub_price_txt)
             kitchenCardView = view.findViewById(R.id.kitchen_card_view)
             addedTxt = view.findViewById(R.id.added_btn)
-           /* if (adapterPosition == 0) {
-                addedTxt.visibility = View.VISIBLE
-            }*/
         }
     }
 
@@ -71,6 +67,8 @@ class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Ki
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.kitchenTitle.text = kitchen.meals[position].name
         holder.kitchenDesc.text = kitchen.meals[position].description
+        holder.ratingTxt.text = kitchen.meals[position].rating?.noOfRatings.toString().plus(if(kitchen.meals[position].rating?.noOfRatings!!<=1)(" Review")
+                else (" Reviews"))
         Glide.with(mContext)
             .load(kitchen.meals[position].images[0])
             .into(holder.mealsImage)
@@ -102,7 +100,6 @@ class KitchenMealsAdapter(private val mContext: Context, private var kitchen: Ki
             UserUtils.mealID = kitchen.meals[position].Id!!
             UserUtils.setMeal(kitchen.meals[position])
             callback?.itemClick(kitchen.meals[position])
-          //  EventBus.getDefault().postSticky(kitchen.meals[position])
             selectedPos = position
             notifyDataSetChanged()
         }

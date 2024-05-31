@@ -65,6 +65,8 @@ class AddressAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val stringBuilder = StringBuilder()
         val userAddress = userAddreses[position]
+        stringBuilder.append(userAddress.fullName)
+        stringBuilder.append(",")
         stringBuilder.append(userAddress.houseNo)
         stringBuilder.append(",")
         stringBuilder.append(userAddress.addressLine1)
@@ -84,7 +86,7 @@ class AddressAdapter(
         holder.addressLayout.setOnClickListener {
             callback?.onItemClick(userAddress.type.toString(), stringBuilder.toString())
         }
-        holder.addressLayout.setOnClickListener {
+        holder.shareLayout.setOnClickListener {
             val shareText = Intent(Intent.ACTION_SEND)
             shareText.type = "text/plain"
             val dataToShare = stringBuilder.toString()

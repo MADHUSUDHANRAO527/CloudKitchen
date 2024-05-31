@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -45,26 +46,29 @@ import java.io.IOException
 import java.util.Locale
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
     private var fragmentList = ArrayList<Fragment>()
-    lateinit var sp: SharedPreferences
+  //  lateinit var sp: SharedPreferences
     private lateinit var menuItem: MenuItem
     private var locationPermissions = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
-    lateinit var editor: SharedPreferences.Editor
+   // lateinit var editor: SharedPreferences.Editor
+   /* var isFromHome : Boolean = true
+        get() = field
+        set(value) {
+            field = value
+        }*/
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        sp = this.getSharedPreferences("SP", Context.MODE_PRIVATE)
-        editor = sp.edit()
         FirebaseApp.initializeApp(this);
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
         FirebaseCrashlytics.getInstance().setCustomKey(
@@ -80,11 +84,19 @@ class HomeActivity : AppCompatActivity() {
                 fragmentList.add(HomeFragment())
         }
         if (getSelectedAddress()?.contains("*") == true) {
-            binding.appBarHome.typeOfAddressTv.text =
-                getSelectedAddress()?.split("*")?.get(0) ?: "Home"
+            binding.appBarHome.typeOfAddressTv.text = "Home"
             binding.appBarHome.addressTxt.text = getSelectedAddress()?.split("*")!![1]
         } else
             binding.appBarHome.addressTxt.text = getSelectedAddress()?.split("*")!![0]
+
+        if (binding.appBarHome.addressTxt.text.toString().contains("Click")) {
+            val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                getLocation()
+            } else{
+                    AppUtils.enableGPSLocation(this)
+            }
+        }
 
         EventBus.getDefault().register(this)
 
@@ -201,11 +213,6 @@ class HomeActivity : AppCompatActivity() {
         binding.appBarHome.addressTxt.text = userAddress?.split("*")!![1]
     }
 
-    fun popBack() {
-        supportFragmentManager?.popBackStack()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val GPS_ON_CALLBACK = 100 //check GPS setting
@@ -213,7 +220,7 @@ class HomeActivity : AppCompatActivity() {
         when (requestCode) {
             GPS_ON_CALLBACK -> {
                 //  AppUtils.getLocation(this)
-                getLocation(this)
+                getLocation()
             }
 
             RESULT_OK -> {
@@ -239,7 +246,7 @@ class HomeActivity : AppCompatActivity() {
             }
 
             if (granted) {
-                getLocation(this)
+                getLocation()
                 // your code if permission granted
             } else {
                 AppUtils.showToast(this, "You denied permission!")
@@ -247,16 +254,16 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-    fun getLocation(activity: Activity) {
+    /*fun getLocation() {
 
         var fusedLocationClient: FusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(activity)
+            LocationServices.getFusedLocationProviderClient(this)
 
         if (ActivityCompat.checkSelfPermission(
-                activity,
+                this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                activity, Manifest.permission.ACCESS_COARSE_LOCATION
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             permissionRequest.launch(locationPermissions)
@@ -272,12 +279,12 @@ class HomeActivity : AppCompatActivity() {
             })
             .addOnSuccessListener { location: Location? ->
                 if (location == null)
-                    Toast.makeText(activity, "Cannot get location.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Cannot get location.", Toast.LENGTH_SHORT).show()
                 else {
                     val lat = location.latitude
                     val long = location.longitude
 
-                    var geocoder = Geocoder(activity, Locale.getDefault())
+                    var geocoder = Geocoder(this, Locale.getDefault())
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             val addressForAPI33AndAbove =
@@ -291,7 +298,8 @@ class HomeActivity : AppCompatActivity() {
                                             //    selectedAddress = userAddress.area!!
                                             //    val array = userAddress.fullAddressLine!!.split(",")
                                             // EventBus.getDefault().postSticky(array[0]+","+array[1])
-                                            (activity as HomeActivity?)?.popBack()
+                                            if (!isFromHome)
+                                                (this as HomeActivity?)?.popBack()
                                             binding.appBarHome.addressTxt.text =
                                                 userAddress.fullAddressLine!!
                                             saveAddress(userAddress.fullAddressLine!!)
@@ -304,7 +312,7 @@ class HomeActivity : AppCompatActivity() {
                                 val userAddress = AppUtils.loadUserAddress(address, lat, long)
                                 //selectedAddress = userAddress.area!!
                                 EventBus.getDefault().postSticky(userAddress.area!!)
-                                (activity as HomeActivity?)?.popBack()
+                                popBack()
                                 //use userAddress :)
                             } else {
                                 //todo: Snackbar error msg
@@ -315,7 +323,7 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
             }
-    }
+    }*/
 
     private fun saveAddress(fullAddressLine: String) {
         editor.putString(

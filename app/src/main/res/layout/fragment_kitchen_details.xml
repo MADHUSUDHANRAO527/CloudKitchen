@@ -7,7 +7,7 @@
     android:background="@color/white"
     tools:context=".ui.fragments.KitchenDetailsFragment">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp">
@@ -264,7 +264,7 @@
         android:layout_marginTop="10dp" />
 
     </RelativeLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:id="@+id/view_plan_layout"
@@ -294,7 +294,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/view_plan"
+            android:text="@string/proceed"
+            android:textAllCaps="true"
             style="@style/SetPoppinsRegularFont"
             android:layout_alignParentEnd="true"
             android:textColor="@color/white"/>

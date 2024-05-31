@@ -63,14 +63,14 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
 
         val args = arguments
-        val kitchenId = args?.getString("kitchen_id", "0")
+     //   val kitchenId = args?.getString("kitchen_id", "0")
         //   val mealId = args?.getString("meal_id", "0")
-        planType = args?.getString("plan_type", "NA").toString()
+      //  planType = args?.getString("plan_type", "NA").toString()
 
-        APIService.process(
+       /* APIService.process(
             requireActivity(),
             this, "/orders/processOrder"
-        )
+        )*/
 
         APIService.makeKitchenDetailsAPICall(
             requireActivity(),
@@ -91,16 +91,15 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
 
         _binding!!.selectMenuBtn.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("kitchen_id", kitchenId)
+            bundle.putString("kitchen_id", UserUtils.getKitchen().Id)
             //  bundle.putString("meal_id", UserUtils.mealID)
-            (requireActivity() as HomeActivity?)?.loadFragment(PlaceOrderFragment(), bundle)
+            (requireActivity() as HomeActivity?)?.loadFragment(SelectPlanFragment(), bundle)
         }
         return root
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onSuccessResponse(response: Any?, tag: Any?) {
-        binding.pBar.visibility = View.GONE
         var gson = Gson()
         if (tag.toString().contains("processOrder")) {
             val processOrder: ReviewOrder = gson.fromJson(
@@ -113,10 +112,13 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
             binding.mealTitleTxt.text = jsonObject.getString("name")
             binding.mealTitleDesc.text = jsonObject.getString("description")
             binding.mealRating.rating = jsonObject.getDouble("avgRating").toFloat()
-            binding.ratingTxt.text = jsonObject.getInt("noOfRatings").toString() + "Reviews"
+            binding.ratingTxt.text = jsonObject.getInt("noOfRatings").toString().plus(
+                if (jsonObject.getInt("noOfRatings") <= 1) (" Review")
+                else (" Reviews")
+            )
             val monthlyMenuObject = jsonObject.getJSONObject("monthlyMenu")
             val wklyMenuArray = jsonObject.getJSONArray("weeklyMenu")
-
+            planType = "M"
             if (planType.contains("M")) {
                 if (monthlyMenuObject.has("week1"))
                     weekly1MenuArray = monthlyMenuObject.getJSONArray("week1")
@@ -142,7 +144,7 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
                         weeklyJson.getInt("id"),
                         weeklyJson.getInt("dayCount"),
                         theList,
-                        weeklyJson.getString("image").get(0).toString()
+                        weeklyJson.getString("image")
                     )
                     weeklyMenuList.add(model)
                 }
@@ -160,7 +162,7 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
                         weeklyJson.getInt("id"),
                         weeklyJson.getInt("dayCount"),
                         theList,
-                        weeklyJson.getString("image").get(0).toString()
+                        weeklyJson.getString("image")
                     )
                     weeklyMenuList.add(model)
                 }
@@ -229,16 +231,19 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
                             if (planType.contains("M")) monthlyMenuList.get(i).name else weeklyMenuList[i].name
                         )
                     )
-                    val adapter =
-                        MenuTabAdapter(
-                            requireActivity(),
-                            childFragmentManager,
-                            planType,
-                            if (planType.contains("M")) monthlyMenuList.size else weeklyMenuList.size
-                        )
-                    _binding!!.viewPager.setAdapter(adapter)
+                    if(isAdded) {
+                        val adapter =
+                            MenuTabAdapter(
+                                requireActivity(),
+                                childFragmentManager,
+                                planType,
+                                if (planType.contains("M")) monthlyMenuList.size else weeklyMenuList.size
+                            )
+                        _binding!!.viewPager.setAdapter(adapter)
+                    }
                 }
             }
+            binding.pBar.visibility = View.GONE
         }
     }
 

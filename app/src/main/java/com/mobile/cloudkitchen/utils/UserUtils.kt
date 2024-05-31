@@ -5,7 +5,6 @@ import android.content.Context
 import com.example.example.Kitchen
 import com.example.example.Meals
 import com.mobile.cloudkitchen.data.model.Addresses
-import com.mobile.cloudkitchen.data.model.MealsModel
 import com.mobile.cloudkitchen.data.model.ReviewOrder
 import com.mobile.cloudkitchen.data.model.UserInfo
 
@@ -14,7 +13,7 @@ object UserUtils {
     private var addresses: Addresses = Addresses()
     private var kitchen: Kitchen = Kitchen()
     private var meal: Meals = Meals()
-    private lateinit var processOrder: ReviewOrder
+    private var processOrder: ReviewOrder = ReviewOrder()
     fun getUserID(activity: Activity): String? {
         return activity.getSharedPreferences("SP", Context.MODE_PRIVATE).getString("USERID", "NA")
     }

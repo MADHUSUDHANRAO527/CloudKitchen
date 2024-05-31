@@ -2,6 +2,7 @@ package com.mobile.cloudkitchen.ui.fragments
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -124,6 +125,7 @@ class HomeFragment : Fragment(), ServiceResponse {
                 binding.rvMeals.adapter = mealsAdapter
             }
             binding.homepBar.visibility = View.GONE
+
         }
     }
 

@@ -11,7 +11,6 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.android.volley.AuthFailureError
 import com.android.volley.ClientError
 import com.android.volley.NetworkError
@@ -39,6 +38,7 @@ import com.mobile.cloudkitchen.ui.activity.HomeActivity
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import java.io.IOException
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -65,7 +65,6 @@ object AppUtils {
             field = value
         }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun enableGPSLocation(activity: Activity ){
         var locationRequest: LocationRequest? = null
         var googleApiClient: GoogleApiClient? = null
@@ -110,7 +109,6 @@ object AppUtils {
     /*fun  permissionsGranted() : Boolean{
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
     }*/
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun getLocation(activity: Activity){
 
         var fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
@@ -154,7 +152,8 @@ object AppUtils {
                             if (address != null) {
                                 val userAddress = loadUserAddress(address, lat, long)
                                 //selectedAddress = userAddress.area!!
-                                EventBus.getDefault().postSticky(userAddress.area!!)
+
+                                EventBus.getDefault().postSticky("Home"+"*"+userAddress.fullAddressLine!!)
                                 (activity as HomeActivity?)?.popBack()
                                 //use userAddress :)
                             } else {
@@ -182,10 +181,30 @@ object AppUtils {
             subAdminArea = address.subAdminArea
         )
     }
-    fun getCurrentDate():String{
-        val c: Date = Calendar.getInstance().getTime()
+    fun getTomoDate(fromDate:Boolean):String{
+        val calendar: Date = Calendar.getInstance().getTime()
         val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        return df.format(c)
+        val todayDate = df.format(calendar)
+        val c = Calendar.getInstance()
+        try {
+            c.time = df.parse(todayDate)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        if(UserUtils.planType.contains("M")){
+            c.add(
+                Calendar.DAY_OF_MONTH,
+                if(fromDate) 1  else 30
+            )
+        }else {
+            c.add(
+                Calendar.DAY_OF_MONTH,
+                if(fromDate) 1  else 7
+            )
+        }
+
+        val output = df.format(c.time)
+        return output
     }
     fun showErrorMsg(error: VolleyError, tag: String?, activity: Activity) {
         var mTag = tag

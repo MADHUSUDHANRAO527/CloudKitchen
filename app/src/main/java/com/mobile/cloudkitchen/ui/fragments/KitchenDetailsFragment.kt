@@ -52,7 +52,7 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse,KitchenMealsAdapter.A
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
         binding.rvMeals.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         val args = arguments
         val kitchenId = args?.getString("kitchen_id", "0")
         val kitchenTitle = args?.getString("kitchen_title", "")
@@ -60,10 +60,10 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse,KitchenMealsAdapter.A
         val kitchenType = args?.getString("kitchen_type", "")
         binding.kitchenTitleTxt.text = kitchenTitle
         binding.kitchenDesc.text = kitchenDesc
-        if (kitchenType?.contains("veg") == true)
+     /*   if (kitchenType?.contains("veg") == true)
             binding.vegCard.visibility = View.VISIBLE
         if (kitchenType?.contains("non") == true)
-            binding.nonvegCard.visibility = View.VISIBLE
+            binding.nonvegCard.visibility = View.VISIBLE*/
 
        // kitchenDetailsViewModel.callKitchenDetails()
 
@@ -75,7 +75,7 @@ class KitchenDetailsFragment : Fragment(), ServiceResponse,KitchenMealsAdapter.A
         _binding!!.viewPlanLayout.setOnClickListener {
              UserUtils.monthlyAmount = monthSubAmount
              UserUtils.wklyAmount = wkSubAmount
-            (requireActivity() as HomeActivity?)?.loadFragment(SelectPlanFragment(), null)
+            (requireActivity() as HomeActivity?)?.loadFragment(ViewMenuFragment(), null)
         }
         _binding?.backIcon?.setOnClickListener {
             (activity as HomeActivity?)?.popBack()

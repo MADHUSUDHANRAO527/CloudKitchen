@@ -76,6 +76,7 @@
             style="?android:attr/ratingBarStyleSmall"
             android:numStars="5"
             android:stepSize="1"
+            android:layout_marginTop="1.5dp"
             android:isIndicator="true" />
 
         <TextView
@@ -83,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text=""
+            android:layout_marginStart="2dp"
             android:textColor="@color/black"
             android:textSize="14sp" />
     </LinearLayout>
@@ -123,8 +125,8 @@
         android:background="@drawable/login_btn_bg_shape"
         android:gravity="center"
         android:padding="14dp"
-        android:text="@string/view_order"
-        android:textAllCaps="false"
+        android:text="@string/proceed"
+        android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
