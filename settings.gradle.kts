@@ -13,6 +13,8 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         mavenLocal()
+       /* maven{ url 'https://jitpack.io' }
+        maven{ url 'https://maven.google.com' }*/
     }
 }
 

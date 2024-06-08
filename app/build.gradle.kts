@@ -98,4 +98,5 @@ dependencies {
 
     // Add the dependency for the Firebase SDK for Google Analytics
     implementation ("com.google.firebase:firebase-crashlytics:18.6.4")
+    implementation ("com.razorpay:checkout:1.6.38")
 }

@@ -81,4 +81,8 @@
     <string name="add_other_type">Add other type</string>
     <string name="no_address_found">No address are added, please add you address to continue!</string>
     <string name="proceed">Proceed</string>
+    <string name="payments">Payments</string>
+    <string name="profile_settings">Profile Settings</string>
+    <string name="order_history">Order History</string>
+    <string name="your_sub">Your Subscriptions</string>
 </resources>

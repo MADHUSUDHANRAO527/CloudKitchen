@@ -2,14 +2,8 @@ package com.mobile.cloudkitchen.ui.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
@@ -18,32 +12,22 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.databinding.ActivityHomeBinding
 import com.mobile.cloudkitchen.ui.fragments.HomeFragment
 import com.mobile.cloudkitchen.ui.fragments.LocationFragment
+import com.mobile.cloudkitchen.ui.fragments.ProfileFragment
 import com.mobile.cloudkitchen.utils.AppUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.io.IOException
-import java.util.Locale
 
 
 class HomeActivity : BaseActivity() {
@@ -51,19 +35,13 @@ class HomeActivity : BaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
     private var fragmentList = ArrayList<Fragment>()
-  //  lateinit var sp: SharedPreferences
+
+    //  lateinit var sp: SharedPreferences
     private lateinit var menuItem: MenuItem
     private var locationPermissions = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
-   // lateinit var editor: SharedPreferences.Editor
-   /* var isFromHome : Boolean = true
-        get() = field
-        set(value) {
-            field = value
-        }*/
-
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,8 +71,8 @@ class HomeActivity : BaseActivity() {
             val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 getLocation()
-            } else{
-                    AppUtils.enableGPSLocation(this)
+            } else {
+                AppUtils.enableGPSLocation(this)
             }
         }
 
@@ -125,13 +103,16 @@ class HomeActivity : BaseActivity() {
 
                 R.id.btm_nav_profile -> {
                     title = resources.getString(R.string.profile)
-                    // loadFragment(LocationFragment(), null)
+                    loadFragment(ProfileFragment(), null)
                 }
             }
             return@setOnItemSelectedListener true
         }
 
 
+    }
+    fun resumeHomeSelection(){
+        binding.appBarHome.bottomNavigation.selectedItemId = R.id.btm_nav_order
     }
 
     private fun setBottomMarginAsPerDisplay(navController: NavController) {
@@ -254,77 +235,6 @@ class HomeActivity : BaseActivity() {
             }
         }
 
-    /*fun getLocation() {
-
-        var fusedLocationClient: FusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(this)
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionRequest.launch(locationPermissions)
-
-        }
-        fusedLocationClient.getCurrentLocation(
-            LocationRequest.PRIORITY_HIGH_ACCURACY,
-            object : CancellationToken() {
-                override fun onCanceledRequested(p0: OnTokenCanceledListener) =
-                    CancellationTokenSource().token
-
-                override fun isCancellationRequested() = false
-            })
-            .addOnSuccessListener { location: Location? ->
-                if (location == null)
-                    Toast.makeText(this, "Cannot get location.", Toast.LENGTH_SHORT).show()
-                else {
-                    val lat = location.latitude
-                    val long = location.longitude
-
-                    var geocoder = Geocoder(this, Locale.getDefault())
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            val addressForAPI33AndAbove =
-                                geocoder.getFromLocation(lat, long, 1,
-                                    object : Geocoder.GeocodeListener {
-                                        override fun onGeocode(p0: MutableList<Address>) {
-                                            val address = p0[0]
-                                            val userAddress =
-                                                AppUtils.loadUserAddress(address, lat, long)
-                                            //use userAddress :)
-                                            //    selectedAddress = userAddress.area!!
-                                            //    val array = userAddress.fullAddressLine!!.split(",")
-                                            // EventBus.getDefault().postSticky(array[0]+","+array[1])
-                                            if (!isFromHome)
-                                                (this as HomeActivity?)?.popBack()
-                                            binding.appBarHome.addressTxt.text =
-                                                userAddress.fullAddressLine!!
-                                            saveAddress(userAddress.fullAddressLine!!)
-                                        }
-                                    })
-                        } else {
-
-                            val address = geocoder.getFromLocation(lat, long, 1)?.get(0)
-                            if (address != null) {
-                                val userAddress = AppUtils.loadUserAddress(address, lat, long)
-                                //selectedAddress = userAddress.area!!
-                                EventBus.getDefault().postSticky(userAddress.area!!)
-                                popBack()
-                                //use userAddress :)
-                            } else {
-                                //todo: Snackbar error msg
-                            }
-                        }
-                    } catch (e: IOException) {
-                        AppUtils.showToast(this, e.message.toString())
-                    }
-                }
-            }
-    }*/
-
     private fun saveAddress(fullAddressLine: String) {
         editor.putString(
             "SELECTED_ADDRESS",
@@ -336,6 +246,10 @@ class HomeActivity : BaseActivity() {
 
     private fun getSelectedAddress(): String? {
         return sp.getString("SELECTED_ADDRESS", "Click here to add address!")
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 }
 

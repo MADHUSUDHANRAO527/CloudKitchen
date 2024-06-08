@@ -71,6 +71,9 @@ class SelectPlanFragment : Fragment() {
             UserUtils.planType = planType
             (requireActivity() as HomeActivity?)?.loadFragment(SelectDurationFragment(), bundle)
         }
+        _binding?.backIcon?.setOnClickListener {
+            (activity as HomeActivity?)?.popBack()
+        }
         return root
     }
 

@@ -58,6 +58,7 @@ object AppUtils {
         set(value) {
             field = value
         }
+    var isFromHome = true
 
     var wklyMenuList = ArrayList<WeeklyMenu>()
         get() = field
@@ -208,19 +209,23 @@ object AppUtils {
     }
     fun showErrorMsg(error: VolleyError, tag: String?, activity: Activity) {
         var mTag = tag
-        try {
-            val json = JSONObject(String(error.networkResponse.data, charset("UTF-8")))
-            if (json.has("message")) {
-               mTag = mTag.plus(json.getString("message")+"$mTag")
+        if(error.networkResponse!=null && error.networkResponse.data!=null) {
+            try {
+                val json = JSONObject(String(error.networkResponse.data, charset("UTF-8")))
+                if (json.has("message")) {
+                    mTag = mTag.plus("-")
+                    mTag = mTag.plus(json.getString("message"))
+                }
+            } catch (e: Exception) {
+                showToast(
+                    activity,
+                    e.message + "-" + mTag
+                )
             }
-        } catch (e: Exception) {
-            showToast(
-                activity,
-                "e.message$mTag"
-            )
         }
         error.networkResponse?.statusCode?.let {
-            mTag = "${"-"}" + mTag.plus(error.networkResponse.statusCode)
+             mTag.plus("\n status code:")
+             mTag.plus(error.networkResponse.statusCode)
         }
 
         if (error is ClientError) {
@@ -238,11 +243,11 @@ object AppUtils {
         } else if (error is AuthFailureError) {
             showToast(
                 activity,
-                "AuthFailureError!$mTag")
+                error.message+"-$mTag")
         } else if (error is ParseError) {
             showToast(
                 activity,
-                "ParseError!$mTag")
+                error.message+"-$mTag")
         } else if (error is NoConnectionError) {
             showToast(
                 activity,

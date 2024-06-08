@@ -1,11 +1,15 @@
 package com.mobile.cloudkitchen.service
 
+import android.R.attr
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import com.android.volley.AuthFailureError
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.VolleyLog
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
@@ -32,36 +36,6 @@ object APIService {
         println("Singleton class invoked.")
     }
 
-    /* fun makeLoginOTPRequest(
-         mContext: Context,
-         tag: String,
-         listener: ServiceResponse?,
-         phoneNumber: String
-     ) {
-         Log.d("URL:",DOMAIN+"/users/sendOtp")
-         val stringRequest: StringRequest = object : StringRequest(
-             Request.Method.POST,
-             DOMAIN+"/users/sendOtp",
-             Response.Listener { response ->
-                 try {
-                     listener?.onSuccessResponse(tag,response)
-                 } catch (e: JSONException) {
-                     e.printStackTrace()
-                 }
-             },
-             Response.ErrorListener { error ->
-                 listener?.onFailureResponse(error,tag)
-             }) {
-             override fun getParams(): Map<String, String> {
-                 val params: MutableMap<String, String> = HashMap()
-                 //Change with your post params
-                 params["mobileNumber"] = phoneNumber
-                 return params
-             }
-         }
-         val requestQueue = Volley.newRequestQueue(mContext)
-         requestQueue.add(stringRequest)
-     }*/
     fun makeLoginOTPRequest(
         mContext: Context,
         tag: String,
@@ -95,38 +69,6 @@ object APIService {
         val requestQueue = Volley.newRequestQueue(mContext)
         requestQueue.add(jsonObjectRequest)
     }
-    /*  fun makeLoginOTPRequest(
-          mContext: Context,
-          tag: String,
-          listener: ServiceResponse?,
-          phoneNumber: String
-      ) {
-          Log.d("URL:",DOMAIN+"/users/sendOtp")
-          val queue = Volley.newRequestQueue(mContext)
-          val URL = DOMAIN+"/users/sendOtp"
-          val jsonParams: MutableMap<String?, String?> = HashMap()
-          jsonParams["mobileNumber"] = "+91 "+phoneNumber
-
-          val postRequest: JsonObjectRequest = object : JsonObjectRequest(
-              Method.POST, URL, (jsonParams as Map<*, *>?)?.let { JSONObject(it) },
-              Response.Listener { response ->
-                  listener?.onSuccessResponse(response,tag)
-                                },
-              Response.ErrorListener { error ->
-                  listener?.onFailureResponse(error,tag)
-              }) {
-              @Throws(AuthFailureError::class)
-              override fun getHeaders(): Map<String, String> {
-                  // headers.put("Content-Type", "application/json; charset=utf-8");
-                  return HashMap()
-              }
-
-              override fun getBodyContentType(): String {
-                  return "application/json"
-              }
-          }
-          queue.add(postRequest)
-      }*/
 
     fun makeVerifyOTPRequest(
         mContext: Context?,
@@ -276,17 +218,17 @@ object APIService {
         mContext: Activity,
         tag: String,
         listener: ServiceResponse?,
-        address: Addresses,isDelete: Boolean
+        address: Addresses, isDelete: Boolean
     ) {
         Log.d("URL:", DOMAIN + "/users/${UserUtils.getUserID(mContext)}")
         val jsonAdd = JSONObject()
         val jsonAddress = JSONObject()
         var jsonAddressArray = JSONArray()
         val gson = Gson()
-        if(isDelete){
+        if (isDelete) {
             UserUtils.getUserInfo().addresses.remove(address)
             jsonAddressArray = JSONArray(gson.toJson(UserUtils.getUserInfo().addresses))
-        }else {
+        } else {
             if (UserUtils.getUserInfo().addresses.isNotEmpty())
                 jsonAddressArray = JSONArray(gson.toJson(UserUtils.getUserInfo().addresses))
             try {
@@ -372,6 +314,7 @@ object APIService {
 
         queue.add(stringRequest)
     }
+
     fun processOrder1(
         mContext: Activity,
         listener: ServiceResponse?,
@@ -415,7 +358,8 @@ object APIService {
 
         queue.add(stringRequest)
     }
-    fun processOrder(
+
+    fun processOrderr(
         mContext: Activity,
         tag: String,
         listener: ServiceResponse?,
@@ -462,12 +406,13 @@ object APIService {
         requestQueue.add(jsonObjectRequest)
     }
 
-    fun process(
+    fun processOrder(
         mContext: Activity,
         listener: ServiceResponse?,
         tag: String,
     ) {
-        val url =  DOMAIN + tag+"?planId=${UserUtils.planId}&mealId=${UserUtils.mealID}&startDate=${UserUtils.fromDate}&endDate=${UserUtils.toDate}"
+        val url =
+            DOMAIN + tag + "?planId=${UserUtils.planId}&mealId=${UserUtils.mealID}&startDate=${UserUtils.fromDate}&endDate=${UserUtils.toDate}"
         Log.d("URL:", url)
         val queue = Volley.newRequestQueue(mContext)
         val stringRequest =
@@ -493,5 +438,37 @@ object APIService {
             }
 
         queue.add(stringRequest)
+    }
+
+    fun callCreateOrder(
+        mContext: Context,
+        tag: String,
+        listener: ServiceResponse?,
+        data: JSONObject
+    ) {
+        Log.d("URL:", DOMAIN + "/orders")
+     //   val json = JSONObject(data)
+        val req: JsonObjectRequest = object : JsonObjectRequest(
+            Method.POST, DOMAIN + "/orders",
+            data,
+            Response.Listener<JSONObject> { response ->
+                listener?.onSuccessResponse(response, tag)
+            },
+            Response.ErrorListener { error ->
+                listener?.onFailureResponse(error, tag)
+            }) {
+            /**
+             * Passing some request headers
+             */
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                //headers.put("Content-Type", "application/json");
+                headers["Authorization"] = "Bearer " + UserUtils.getUserToken(mContext)
+                return headers
+            }
+        }
+        val requestQueue = Volley.newRequestQueue(mContext)
+        requestQueue.add(req)
     }
 }

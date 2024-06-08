@@ -1,18 +1,18 @@
 package com.mobile.cloudkitchen.ui.fragments
 
+import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
-import com.example.example.Kitchen
-import com.example.example.User
+import com.example.example.CreateOrder
 import com.google.gson.Gson
 import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.data.model.ReviewOrder
@@ -21,17 +21,18 @@ import com.mobile.cloudkitchen.databinding.FragmentPlaceOrderBinding
 import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
-import com.mobile.cloudkitchen.ui.adapter.KitchenMealsAdapter
 import com.mobile.cloudkitchen.utils.AppUtils
 import com.mobile.cloudkitchen.utils.UserUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.razorpay.Checkout
+import com.razorpay.PaymentResultListener
+import okhttp3.internal.Internal.instance
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
-import java.lang.IndexOutOfBoundsException
 
 
-class PlaceOrderFragment : Fragment(), ServiceResponse {
+class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentResultListener {
     private var _binding: FragmentPlaceOrderBinding? = null
 
     // This property is only valid between onCreateView and
@@ -39,6 +40,8 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
     lateinit var sp: SharedPreferences
     private val binding get() = _binding!!
     private lateinit var planType: String
+    private var createOrder = CreateOrder()
+    private var processOrder = ReviewOrder()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,14 +53,7 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         _binding = FragmentPlaceOrderBinding.inflate(inflater, container, false)
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
-        try {
-            binding.deliverAtTxt.text = sp.getString("SELECTED_ADDRESS","Click here to add address!").toString().split("*")[0]
-            binding.addressTxt.text = sp.getString("SELECTED_ADDRESS","Click here to add address!").toString().split("*")[1]
-        }catch (e:IndexOutOfBoundsException){
-            binding.deliverAtTxt.text = "Add or Select Address!"
-            binding.addressTxt.text = sp.getString("SELECTED_ADDRESS","")
-            e.printStackTrace()
-        }
+        setAddress()
         binding.deliveryChargesTxt.text =
             requireActivity().resources.getString(R.string.Rs) + "0.00"
         binding.grandTotalTxt.text =
@@ -65,12 +61,35 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         binding.mealTitleTxt.text = UserUtils.getMeal().name
         binding.mealTitle.text = UserUtils.getMeal().name
         binding.mealTitleDesc.text = UserUtils.getMeal().description
-      //  binding.mealsCostTxt.text = onlyMealCost
+        //  binding.mealsCostTxt.text = onlyMealCost
 
-        "${UserUtils.fromHumanDate}-${UserUtils.toHumanDate}".also { binding.planDurationTxt.text = it }
+        "${UserUtils.fromHumanDate}-${UserUtils.toHumanDate}".also {
+            binding.planDurationTxt.text = it
+        }
         UserUtils.timeSlot.also { binding.deliverySlotTxt.text = it }
         _binding!!.paynowBtn.setOnClickListener {
-            AppUtils.showToast(requireActivity(),"will navigate to payment screen!")
+
+          /*  val razorpay = RazorpayClient("[YOUR_KEY_ID]", "[YOUR_KEY_SECRET]")
+
+            val orderRequest = JSONObject()
+            orderRequest.put("amount", 50000)
+            orderRequest.put("currency", "INR")
+            orderRequest.put("receipt", "receipt#1")
+            val notes = JSONObject()
+            notes.put("notes_key_1", "Tea, Earl Grey, Hot")
+            notes.put("notes_key_1", "Tea, Earl Grey, Hot")
+            orderRequest.put("notes", notes)
+
+            val order: Order = instance.orders.create(orderRequest)
+*/
+
+
+
+
+
+            startPayment()
+         //   prepareProcessOrderModel()
+         //   AppUtils.showToast(requireActivity(), "will navigate to payment screen!")
         }
         binding.changeDurationTxt.setOnClickListener {
             (requireActivity() as HomeActivity?)?.loadFragment(SelectDurationFragment(), null)
@@ -79,32 +98,139 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
             (requireActivity() as HomeActivity?)?.loadFragment(SelectPlanFragment(), null)
         }
         binding.changeAddressTxt.setOnClickListener {
+            AppUtils.isFromHome = false
             (requireActivity() as HomeActivity?)?.loadFragment(LocationFragment(), null)
         }
-
-        APIService.process(
+        _binding?.backIcon?.setOnClickListener {
+            (activity as HomeActivity?)?.popBack()
+        }
+        APIService.processOrder(
             requireActivity(),
             this, "/orders/processOrder"
         )
         return root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
+    }
+
+    private fun setAddress() {
+        try {
+            binding.deliverAtTxt.text =
+                sp.getString("SELECTED_ADDRESS", "Click here to add address!").toString()
+                    .split("*")[0]
+            binding.addressTxt.text =
+                sp.getString("SELECTED_ADDRESS", "Click here to add address!").toString()
+                    .split("*")[1]
+        } catch (e: IndexOutOfBoundsException) {
+            binding.deliverAtTxt.text = "Add or Select Address!"
+            binding.addressTxt.text = sp.getString("SELECTED_ADDRESS", "")
+            e.printStackTrace()
+        }
+    }
+
+    //TODO
+    private fun prepareProcessOrderModel() {
+
+        val jsonObject = JSONObject()
+        val gson = Gson()
+
+        jsonObject.put("user",UserUtils.getUserID(requireActivity()))
+        jsonObject.put("kitchen",UserUtils.getKitchen().Id)
+        jsonObject.put("meal",UserUtils.getMeal().Id)
+        jsonObject.put("plan",UserUtils.planId)
+        jsonObject.put("status","PLACED")
+        jsonObject.put("deliveryInstructions","Adding sample data : ")
+     //   jsonObject.put("","NA")
+        jsonObject.put("paymentType", "UPI")
+        jsonObject.put("savedAmount",processOrder.savedAmount)
+        jsonObject.put("totalAmount",processOrder.totalAmount)
+        jsonObject.put("deliveryCharges",0.0)
+        jsonObject.put("grandTotal",processOrder.grandTotal)
+        jsonObject.put("deliveryAddress",gson.toJson(UserUtils.getSelectedAddress()))
+        jsonObject.put("isPaymentDone",true)
+        jsonObject.put("planStartDate",UserUtils.fromDate)
+        jsonObject.put("planEndDate",UserUtils.toDate)
+        jsonObject.put("deliveryTimeSlot",UserUtils.timeSlot)
+        APIService.callCreateOrder(
+            requireActivity(),
+            "CREATE_ORDER",
+            this,jsonObject
+
+        )
+    }
+
+    private fun startPayment() {
+        /*
+        *  You need to pass the current activity to let Razorpay create CheckoutActivity
+        * */
+        Checkout.preload(requireActivity())
+        val activity: Activity = requireActivity()
+        val co = Checkout()
+        co.setKeyID("rzp_test_CLECjNaCmPM9pH")
+        try {
+            val options = JSONObject()
+            options.put("name", "Razorpay Corp")
+            options.put("description", "Demoing Charges")
+            //You can omit the image option to fetch the image from the dashboard
+            options.put("image", "http://example.com/image/rzp.jpg")
+            options.put("theme.color", "#3399cc");
+            options.put("currency", "INR");
+            options.put("order_id", "order_DBJOWzybf0sJbb");
+            options.put(
+                "amount",
+                UserUtils.getReviewOrder().grandTotal.toString()
+            )//pass amount in currency subunits
+
+            val retryObj = JSONObject();
+            retryObj.put("enabled", true);
+            retryObj.put("max_count", 4);
+            options.put("retry", retryObj);
+
+            val prefill = JSONObject()
+            prefill.put("email", "madhurao527@gmail.com")
+            prefill.put("contact", "6300592930")
+
+            options.put("prefill", prefill)
+            co.open(activity, options)
+        } catch (e: Exception) {
+            Toast.makeText(activity, "Error in payment: " + e.message, Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        }
+    }
+
     override fun onSuccessResponse(response: Any?, tag: Any?) {
         //{"totalAmount":0,"plannedDates":[],"discount":"10%","grandTotal":0,"savedAmount":0}
+        //{"totalAmount":4257,"plannedDates":["2024-06-05","2024-06-06","2024-06-07","2024-06-10","2024-06-11","2024-06-12","2024-06-13","2024-06-14","2024-06-17","2024-06-18","2024-06-19","2024-06-20","2024-06-21","2024-06-24","2024-06-25","2024-06-26","2024-06-27","2024-06-28","2024-07-01","2024-07-02","2024-07-03","2024-07-04","2024-07-05","2024-07-08","2024-07-09","2024-07-10","2024-07-11","2024-07-12","2024-07-15","2024-07-16","2024-07-17","2024-07-18","2024-07-19","2024-07-22","2024-07-23","2024-07-24","2024-07-25","2024-07-26","2024-07-29","2024-07-30","2024-07-31","2024-08-01","2024-08-02"],
+        // "discount":"5%","grandTotal":4044.15,"savedAmount":212.85000000000002}
         var gson = Gson()
-        if (tag.toString().contains("processOrder")) {
-            val processOrder: ReviewOrder = gson.fromJson(
+        if (tag.toString().contains("CREATE_ORDER")) {
+            Log.d("SUCCESS:", "")
+            var jsonObject = response as JSONObject
+            AppUtils.showToast(requireActivity(),jsonObject.getString("message"))
+            (requireActivity() as HomeActivity?)?.loadFragment(HomeFragment(), null)
+
+            //{
+            //  "message": "Your order placed successfully"
+            //}
+        } else if (tag.toString().contains("processOrder")) {
+            var processOrder = gson.fromJson(
                 response.toString(),
                 ReviewOrder::class.java
             )
             UserUtils.setReviewOrder(processOrder)
-            val onlyMealCost = requireActivity().resources.getString(R.string.Rs) + processOrder.totalAmount.toString()
-            val mealsCostTxt =  onlyMealCost +
+            val onlyMealCost =
+                requireActivity().resources.getString(R.string.Rs) + processOrder.totalAmount.toString()
+            val mealsCostTxt = onlyMealCost +
                     "(" + if (UserUtils.planType.contains("W")) UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() else UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()
-            val savedAmountTxt = requireActivity().resources.getString(R.string.Rs) + processOrder.savedAmount.toString()
+            val savedAmountTxt =
+                requireActivity().resources.getString(R.string.Rs) + processOrder.savedAmount.toString()
+
             binding.planTypeBtn.text = if (UserUtils.planType.contains("W")) "WEEKLY" else "MONTHLY"
             binding.mealsCostTxt.text = mealsCostTxt
-            binding.totalSavingTxt.text =savedAmountTxt
+            binding.totalSavingTxt.text = savedAmountTxt
             binding.subscriptionCostTxt.text = onlyMealCost
         }
         _binding?.pBar?.visibility = View.GONE
@@ -115,4 +241,22 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         AppUtils.showErrorMsg(error, tag.toString(), requireActivity())
     }
 
+    override fun onPaymentSuccess(p0: String?) {
+        Log.d("SUCCESS:", "")
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        Log.d("FAIL:", "")
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(userAddress: String?) {
+        setAddress()
+        (activity as HomeActivity?)?.showHideBottomNavigation(false, false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
 }

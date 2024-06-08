@@ -121,7 +121,9 @@ class SelectDurationFragment : Fragment() {
             bundle.putString("plan_type", planType)
             (requireActivity() as HomeActivity?)?.loadFragment(PlaceOrderFragment(), bundle)
         }
-
+        _binding?.backIcon?.setOnClickListener {
+            (activity as HomeActivity?)?.popBack()
+        }
         return root
     }
 

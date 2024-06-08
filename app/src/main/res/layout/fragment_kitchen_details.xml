@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/kitchen_title_txt"
-                android:padding="4dp"
+                android:padding="2dp"
                 style="@style/SetPoppinsRegularFont"
                 android:text="House of Meals"
                 android:textAlignment="center"
@@ -82,7 +82,7 @@
                 android:textSize="14sp"
                 style="@style/SetPoppinsRegularFont"
                 android:layout_below="@+id/kitchen_desc"
-                android:padding="4dp"
+                android:padding="2dp"
                 android:textColor="#F5BE00"
                 android:textAlignment="center"
                 android:textStyle="bold" />
@@ -91,18 +91,19 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/kitchen_availability_type">
 
-            <TextView
-                android:id="@+id/kitchen_food_delivery_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="30-40 mins"
-                style="@style/SetPoppinsRegularFont"
-                android:textSize="14sp"
-                android:padding="4dp"
-                android:layout_centerInParent="true"
-                android:textColor="#818181"
-                android:textAlignment="center"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/kitchen_food_delivery_time"
+                    style="@style/SetPoppinsRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:padding="4dp"
+                    android:visibility="gone"
+                    android:text="30-40 mins"
+                    android:textAlignment="center"
+                    android:textColor="#818181"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/kitchen_distance"
@@ -113,6 +114,7 @@
                 android:textSize="14sp"
                 style="@style/SetPoppinsRegularFont"
                 android:padding="4dp"
+                android:visibility="gone"
                 android:textColor="#818181"
                 android:textAlignment="center"
                 android:textStyle="bold" />

@@ -61,16 +61,9 @@ class ViewMenuFragment : Fragment(), ServiceResponse {
         _binding = FragmentViewMenuBinding.inflate(inflater, container, false)
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
-
-        val args = arguments
-     //   val kitchenId = args?.getString("kitchen_id", "0")
-        //   val mealId = args?.getString("meal_id", "0")
-      //  planType = args?.getString("plan_type", "NA").toString()
-
-       /* APIService.process(
-            requireActivity(),
-            this, "/orders/processOrder"
-        )*/
+        _binding?.backIcon?.setOnClickListener {
+            (activity as HomeActivity?)?.popBack()
+        }
 
         APIService.makeKitchenDetailsAPICall(
             requireActivity(),

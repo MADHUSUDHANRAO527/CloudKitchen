@@ -3,7 +3,6 @@ package com.mobile.cloudkitchen.ui.fragments
 import android.Manifest
 import android.content.Context
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -104,7 +103,8 @@ class LocationFragment : Fragment(),ServiceResponse, AddressAdapter.AdapterCallb
 
     override fun onStop() {
         super.onStop()
-        (activity as HomeActivity?)?.showHideBottomNavigation(true,true)
+        if (AppUtils.isFromHome)
+            (activity as HomeActivity?)?.showHideBottomNavigation(true, true)
     }
     fun refreshAddress() {
         binding.lpBar.visibility = View.VISIBLE

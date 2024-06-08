@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobile.cloudkitchen.R
 import com.mobile.cloudkitchen.data.model.Addresses
 import com.mobile.cloudkitchen.service.APIService
+import com.mobile.cloudkitchen.utils.UserUtils
 
 
 class AddressAdapter(
@@ -84,6 +85,7 @@ class AddressAdapter(
             showPopup(holder.editDeleteLayout, position)
         }
         holder.addressLayout.setOnClickListener {
+            UserUtils.setSelectedAddress(userAddress)
             callback?.onItemClick(userAddress.type.toString(), stringBuilder.toString())
         }
         holder.shareLayout.setOnClickListener {
