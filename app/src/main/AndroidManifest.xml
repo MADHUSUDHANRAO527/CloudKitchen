@@ -71,10 +71,10 @@
 
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_CLECjNaCmPM9pH,b354qo8sPskjR9zAVZw8XGIZ" />
+            android:value="rzp_test_CLECjNaCmPM9pH" />
         <receiver
             android:name="com.razorpay.RzpTokenReceiver"
-            android:exported="true">
+            >
             <intent-filter>
                 <action android:name="rzp.device_token.share" />
 

@@ -24,7 +24,9 @@ import com.mobile.cloudkitchen.ui.activity.HomeActivity
 import com.mobile.cloudkitchen.utils.AppUtils
 import com.mobile.cloudkitchen.utils.UserUtils
 import com.razorpay.Checkout
+import com.razorpay.PaymentData
 import com.razorpay.PaymentResultListener
+import com.razorpay.PaymentResultWithDataListener
 import okhttp3.internal.Internal.instance
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -32,7 +34,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
 
-class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentResultListener {
+class PlaceOrderFragment : Fragment(), ServiceResponse {
     private var _binding: FragmentPlaceOrderBinding? = null
 
     // This property is only valid between onCreateView and
@@ -86,7 +88,7 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentResultListener {
 
 
 
-
+         //   startPayment1()
             startPayment()
          //   prepareProcessOrderModel()
          //   AppUtils.showToast(requireActivity(), "will navigate to payment screen!")
@@ -109,6 +111,44 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentResultListener {
             this, "/orders/processOrder"
         )
         return root
+    }
+
+    private fun startPayment1() {
+     /*   val payloadHelper = PayloadHelper("INR", 100, "order_XXXXXXXXX")
+        payloadHelper.name = "Gaurav Kumae"
+        payloadHelper.description = "Description"
+        payloadHelper.prefillEmail = "gaurav.kumar@example.com"
+        payloadHelper.prefillContact = "9000090000"
+        payloadHelper.prefillCardNum = "4111111111111111"
+        payloadHelper.prefillCardCvv = "111"
+        payloadHelper.prefillCardExp = "11/24"
+        payloadHelper.prefillMethod = "card"
+        payloadHelper.prefillName = "MerchantName"
+        payloadHelper.sendSmsHash = true
+        payloadHelper.retryMaxCount = 4
+        payloadHelper.retryEnabled = true
+        payloadHelper.color = "#000000"
+        payloadHelper.allowRotation = true
+        payloadHelper.rememberCustomer = true
+        payloadHelper.timeout = 10
+        payloadHelper.redirect = true
+        payloadHelper.recurring = "1"
+        payloadHelper.subscriptionCardChange = true
+        payloadHelper.customerId = "cust_1221"
+        payloadHelper.callbackUrl = "https://accepts-posts.request"
+        payloadHelper.subscriptionId = "sub_2123"
+        payloadHelper.modalConfirmClose = true
+        payloadHelper.backDropColor = "#ffffff"
+        payloadHelper.hideTopBar = true
+        payloadHelper.notes = JSONObject("{\"remarks\":\"Discount to cusomter\"}")
+        payloadHelper.readOnlyEmail = true
+        payloadHelper.readOnlyContact = true
+        payloadHelper.readOnlyName = true
+        payloadHelper.image = "https://www.razorpay.com"
+        // these values are set mandatorily during object initialization. Those values can be overridden like this
+        payloadHelper.amount=100
+        payloadHelper.currency="INR"
+        payloadHelper.orderId = "21237832"*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -175,19 +215,19 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentResultListener {
             options.put("name", "Razorpay Corp")
             options.put("description", "Demoing Charges")
             //You can omit the image option to fetch the image from the dashboard
-            options.put("image", "http://example.com/image/rzp.jpg")
+            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.pn")
             options.put("theme.color", "#3399cc");
             options.put("currency", "INR");
-            options.put("order_id", "order_DBJOWzybf0sJbb");
+         //   options.put("order_id", "order_DBJOWzybf0sJbb");
             options.put(
                 "amount",
                 UserUtils.getReviewOrder().grandTotal.toString()
             )//pass amount in currency subunits
 
-            val retryObj = JSONObject();
+          /*  val retryObj = JSONObject();
             retryObj.put("enabled", true);
             retryObj.put("max_count", 4);
-            options.put("retry", retryObj);
+            options.put("retry", retryObj);*/
 
             val prefill = JSONObject()
             prefill.put("email", "madhurao527@gmail.com")
@@ -241,13 +281,14 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentResultListener {
         AppUtils.showErrorMsg(error, tag.toString(), requireActivity())
     }
 
-    override fun onPaymentSuccess(p0: String?) {
-        Log.d("SUCCESS:", "")
+   /* override fun onPaymentSuccess(p0: String?,p1:PaymentData) {
+        Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
     }
 
     override fun onPaymentError(p0: Int, p1: String?) {
-        Log.d("FAIL:", "")
-    }
+        Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
+
+    }*/
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(userAddress: String?) {
@@ -259,4 +300,6 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentResultListener {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
+
+
 }

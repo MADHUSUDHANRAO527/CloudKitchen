@@ -25,12 +25,15 @@ import com.mobile.cloudkitchen.ui.fragments.HomeFragment
 import com.mobile.cloudkitchen.ui.fragments.LocationFragment
 import com.mobile.cloudkitchen.ui.fragments.ProfileFragment
 import com.mobile.cloudkitchen.utils.AppUtils
+import com.razorpay.PaymentData
+import com.razorpay.PaymentResultListener
+import com.razorpay.PaymentResultWithDataListener
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-class HomeActivity : BaseActivity() {
+class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResultListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
@@ -250,6 +253,23 @@ class HomeActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+    }
+    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
+        Toast.makeText(this,"Payment Successful : Payment ID: $p0\nPayment Data: ${p1?.data}",Toast.LENGTH_LONG).show()
+
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
+        Toast.makeText(this,"Payment Failed : Payment Data: ${p2?.data}",Toast.LENGTH_LONG).show()
+    }
+
+    override fun onPaymentSuccess(p0: String?) {
+        Toast.makeText(this,"Payment Successful : $p0}",Toast.LENGTH_LONG).show()
+
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        Toast.makeText(this,"Payment Failed : Payment Data: ${p1}",Toast.LENGTH_LONG).show()
     }
 }
 
