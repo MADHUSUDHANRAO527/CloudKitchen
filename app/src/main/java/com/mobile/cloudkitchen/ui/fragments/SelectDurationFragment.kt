@@ -349,7 +349,7 @@ class SelectDurationFragment : Fragment() {
 
     private fun showDatePopup(startDate: Boolean, endDate: Boolean) {
         val li = LayoutInflater.from(context)
-        val promptsView: View = li.inflate(com.mobile.cloudkitchen.R.layout.calender_layout, null)
+        val promptsView: View = li.inflate(R.layout.calender_layout, null)
 
         val alertDialogBuilder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(
             context

@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CalendarView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,12 +17,14 @@ import com.android.volley.VolleyError
 import com.example.example.CreateOrder
 import com.google.gson.Gson
 import com.mobile.cloudkitchen.R
+import com.mobile.cloudkitchen.data.events.PaymentSuccessEvent
 import com.mobile.cloudkitchen.data.model.ReviewOrder
 import com.mobile.cloudkitchen.data.viewmodels.KitchenDetailsVM
 import com.mobile.cloudkitchen.databinding.FragmentPlaceOrderBinding
 import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
+import com.mobile.cloudkitchen.ui.activity.PaymentTrigger
 import com.mobile.cloudkitchen.utils.AppUtils
 import com.mobile.cloudkitchen.utils.UserUtils
 import com.razorpay.Checkout
@@ -32,9 +36,10 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
+import java.util.HashMap
 
 
-class PlaceOrderFragment : Fragment(), ServiceResponse {
+class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
     private var _binding: FragmentPlaceOrderBinding? = null
 
     // This property is only valid between onCreateView and
@@ -71,27 +76,25 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         UserUtils.timeSlot.also { binding.deliverySlotTxt.text = it }
         _binding!!.paynowBtn.setOnClickListener {
 
-          /*  val razorpay = RazorpayClient("[YOUR_KEY_ID]", "[YOUR_KEY_SECRET]")
+            /*  val razorpay = RazorpayClient("[YOUR_KEY_ID]", "[YOUR_KEY_SECRET]")
 
-            val orderRequest = JSONObject()
-            orderRequest.put("amount", 50000)
-            orderRequest.put("currency", "INR")
-            orderRequest.put("receipt", "receipt#1")
-            val notes = JSONObject()
-            notes.put("notes_key_1", "Tea, Earl Grey, Hot")
-            notes.put("notes_key_1", "Tea, Earl Grey, Hot")
-            orderRequest.put("notes", notes)
+              val orderRequest = JSONObject()
+              orderRequest.put("amount", 50000)
+              orderRequest.put("currency", "INR")
+              orderRequest.put("receipt", "receipt#1")
+              val notes = JSONObject()
+              notes.put("notes_key_1", "Tea, Earl Grey, Hot")
+              notes.put("notes_key_1", "Tea, Earl Grey, Hot")
+              orderRequest.put("notes", notes)
 
-            val order: Order = instance.orders.create(orderRequest)
-*/
-
-
+              val order: Order = instance.orders.create(orderRequest)
+  */
 
 
-         //   startPayment1()
+            //   startPayment1()
             startPayment()
-         //   prepareProcessOrderModel()
-         //   AppUtils.showToast(requireActivity(), "will navigate to payment screen!")
+          //     prepareProcessOrderModel()
+            //   AppUtils.showToast(requireActivity(), "will navigate to payment screen!")
         }
         binding.changeDurationTxt.setOnClickListener {
             (requireActivity() as HomeActivity?)?.loadFragment(SelectDurationFragment(), null)
@@ -110,50 +113,56 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
             requireActivity(),
             this, "/orders/processOrder"
         )
+
+        val home = (activity as HomeActivity?)
+        home?.listner = {
+            Log.d("TRIggered", ":::::")
+        }
         return root
     }
 
     private fun startPayment1() {
-     /*   val payloadHelper = PayloadHelper("INR", 100, "order_XXXXXXXXX")
-        payloadHelper.name = "Gaurav Kumae"
-        payloadHelper.description = "Description"
-        payloadHelper.prefillEmail = "gaurav.kumar@example.com"
-        payloadHelper.prefillContact = "9000090000"
-        payloadHelper.prefillCardNum = "4111111111111111"
-        payloadHelper.prefillCardCvv = "111"
-        payloadHelper.prefillCardExp = "11/24"
-        payloadHelper.prefillMethod = "card"
-        payloadHelper.prefillName = "MerchantName"
-        payloadHelper.sendSmsHash = true
-        payloadHelper.retryMaxCount = 4
-        payloadHelper.retryEnabled = true
-        payloadHelper.color = "#000000"
-        payloadHelper.allowRotation = true
-        payloadHelper.rememberCustomer = true
-        payloadHelper.timeout = 10
-        payloadHelper.redirect = true
-        payloadHelper.recurring = "1"
-        payloadHelper.subscriptionCardChange = true
-        payloadHelper.customerId = "cust_1221"
-        payloadHelper.callbackUrl = "https://accepts-posts.request"
-        payloadHelper.subscriptionId = "sub_2123"
-        payloadHelper.modalConfirmClose = true
-        payloadHelper.backDropColor = "#ffffff"
-        payloadHelper.hideTopBar = true
-        payloadHelper.notes = JSONObject("{\"remarks\":\"Discount to cusomter\"}")
-        payloadHelper.readOnlyEmail = true
-        payloadHelper.readOnlyContact = true
-        payloadHelper.readOnlyName = true
-        payloadHelper.image = "https://www.razorpay.com"
-        // these values are set mandatorily during object initialization. Those values can be overridden like this
-        payloadHelper.amount=100
-        payloadHelper.currency="INR"
-        payloadHelper.orderId = "21237832"*/
+        /*   val payloadHelper = PayloadHelper("INR", 100, "order_XXXXXXXXX")
+           payloadHelper.name = "Gaurav Kumae"
+           payloadHelper.description = "Description"
+           payloadHelper.prefillEmail = "gaurav.kumar@example.com"
+           payloadHelper.prefillContact = "9000090000"
+           payloadHelper.prefillCardNum = "4111111111111111"
+           payloadHelper.prefillCardCvv = "111"
+           payloadHelper.prefillCardExp = "11/24"
+           payloadHelper.prefillMethod = "card"
+           payloadHelper.prefillName = "MerchantName"
+           payloadHelper.sendSmsHash = true
+           payloadHelper.retryMaxCount = 4
+           payloadHelper.retryEnabled = true
+           payloadHelper.color = "#000000"
+           payloadHelper.allowRotation = true
+           payloadHelper.rememberCustomer = true
+           payloadHelper.timeout = 10
+           payloadHelper.redirect = true
+           payloadHelper.recurring = "1"
+           payloadHelper.subscriptionCardChange = true
+           payloadHelper.customerId = "cust_1221"
+           payloadHelper.callbackUrl = "https://accepts-posts.request"
+           payloadHelper.subscriptionId = "sub_2123"
+           payloadHelper.modalConfirmClose = true
+           payloadHelper.backDropColor = "#ffffff"
+           payloadHelper.hideTopBar = true
+           payloadHelper.notes = JSONObject("{\"remarks\":\"Discount to cusomter\"}")
+           payloadHelper.readOnlyEmail = true
+           payloadHelper.readOnlyContact = true
+           payloadHelper.readOnlyName = true
+           payloadHelper.image = "https://www.razorpay.com"
+           // these values are set mandatorily during object initialization. Those values can be overridden like this
+           payloadHelper.amount=100
+           payloadHelper.currency="INR"
+           payloadHelper.orderId = "21237832"*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        EventBus.getDefault().register(this)
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this)
     }
 
     private fun setAddress() {
@@ -172,32 +181,32 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
     }
 
     //TODO
-    private fun prepareProcessOrderModel() {
+    private fun prepareProcessOrder(paymentEvent:PaymentSuccessEvent) {
 
         val jsonObject = JSONObject()
         val gson = Gson()
 
-        jsonObject.put("user",UserUtils.getUserID(requireActivity()))
-        jsonObject.put("kitchen",UserUtils.getKitchen().Id)
-        jsonObject.put("meal",UserUtils.getMeal().Id)
-        jsonObject.put("plan",UserUtils.planId)
-        jsonObject.put("status","PLACED")
-        jsonObject.put("deliveryInstructions","Adding sample data : ")
-     //   jsonObject.put("","NA")
+        jsonObject.put("user", UserUtils.getUserID(requireActivity()))
+        jsonObject.put("kitchen", UserUtils.getKitchen().Id)
+        jsonObject.put("meal", UserUtils.getMeal().Id)
+        jsonObject.put("plan", UserUtils.planId)
+        jsonObject.put("status", "PLACED")
+        jsonObject.put("deliveryInstructions", "Adding sample data : ")
+        //   jsonObject.put("","NA")
         jsonObject.put("paymentType", "UPI")
-        jsonObject.put("savedAmount",processOrder.savedAmount)
-        jsonObject.put("totalAmount",processOrder.totalAmount)
-        jsonObject.put("deliveryCharges",0.0)
-        jsonObject.put("grandTotal",processOrder.grandTotal)
-        jsonObject.put("deliveryAddress",gson.toJson(UserUtils.getSelectedAddress()))
-        jsonObject.put("isPaymentDone",true)
-        jsonObject.put("planStartDate",UserUtils.fromDate)
-        jsonObject.put("planEndDate",UserUtils.toDate)
-        jsonObject.put("deliveryTimeSlot",UserUtils.timeSlot)
+        jsonObject.put("savedAmount", processOrder.savedAmount)
+        jsonObject.put("totalAmount", processOrder.totalAmount)
+        jsonObject.put("deliveryCharges", 0.0)
+        jsonObject.put("grandTotal", processOrder.grandTotal)
+        jsonObject.put("deliveryAddress", gson.toJson(UserUtils.getSelectedAddress()))
+        jsonObject.put("isPaymentDone", true)
+        jsonObject.put("planStartDate", UserUtils.fromDate)
+        jsonObject.put("planEndDate", UserUtils.toDate)
+        jsonObject.put("deliveryTimeSlot", UserUtils.timeSlot)
         APIService.callCreateOrder(
             requireActivity(),
             "CREATE_ORDER",
-            this,jsonObject
+            this, jsonObject
 
         )
     }
@@ -218,16 +227,16 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
             options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.pn")
             options.put("theme.color", "#3399cc");
             options.put("currency", "INR");
-         //   options.put("order_id", "order_DBJOWzybf0sJbb");
+            //   options.put("order_id", "order_DBJOWzybf0sJbb");
             options.put(
                 "amount",
                 UserUtils.getReviewOrder().grandTotal.toString()
             )//pass amount in currency subunits
 
-          /*  val retryObj = JSONObject();
-            retryObj.put("enabled", true);
-            retryObj.put("max_count", 4);
-            options.put("retry", retryObj);*/
+            /*  val retryObj = JSONObject();
+              retryObj.put("enabled", true);
+              retryObj.put("max_count", 4);
+              options.put("retry", retryObj);*/
 
             val prefill = JSONObject()
             prefill.put("email", "madhurao527@gmail.com")
@@ -249,9 +258,24 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         if (tag.toString().contains("CREATE_ORDER")) {
             Log.d("SUCCESS:", "")
             var jsonObject = response as JSONObject
-            AppUtils.showToast(requireActivity(),jsonObject.getString("message"))
-            (requireActivity() as HomeActivity?)?.loadFragment(HomeFragment(), null)
+            AppUtils.showToast(requireActivity(), jsonObject.getString("message"))
 
+            val li = LayoutInflater.from(context)
+            val promptsView: View = li.inflate(R.layout.success_popup, null)
+
+            val alertDialogBuilder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(
+                context
+            )
+            val okBtn = promptsView
+                .findViewById<View>(R.id.ok_btn) as Button
+            alertDialogBuilder.setView(promptsView)
+            val alertDialog: android.app.AlertDialog? = alertDialogBuilder.create()
+            okBtn.setOnClickListener {
+                alertDialog?.dismiss()
+                (requireActivity() as HomeActivity?)?.fragmentManager?.fragments?.clear()
+                (requireActivity() as HomeActivity?)?.loadFragment(HomeFragment(), null)
+            }
+            alertDialog!!.show()
             //{
             //  "message": "Your order placed successfully"
             //}
@@ -281,14 +305,14 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         AppUtils.showErrorMsg(error, tag.toString(), requireActivity())
     }
 
-   /* override fun onPaymentSuccess(p0: String?,p1:PaymentData) {
-        Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
-    }
+    /* override fun onPaymentSuccess(p0: String?,p1:PaymentData) {
+         Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
+     }
 
-    override fun onPaymentError(p0: Int, p1: String?) {
-        Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
+     override fun onPaymentError(p0: Int, p1: String?) {
+         Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
 
-    }*/
+     }*/
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(userAddress: String?) {
@@ -296,10 +320,23 @@ class PlaceOrderFragment : Fragment(), ServiceResponse {
         (activity as HomeActivity?)?.showHideBottomNavigation(false, false)
     }
 
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(paymentEvent: PaymentSuccessEvent) {
+       // Toast.makeText(activity, "Success in payment: " + paymentEvent.id, Toast.LENGTH_LONG).show()
+        prepareProcessOrder(paymentEvent)
     }
 
+    override fun onStop() {
+        super.onStop()
+    }
 
+    override fun paymentSuccess(id: String) {
+        Log.d("TRIggered", ":::::")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this)
+    }
 }

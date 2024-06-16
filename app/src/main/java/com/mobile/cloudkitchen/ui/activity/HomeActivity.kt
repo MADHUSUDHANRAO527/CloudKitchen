@@ -20,6 +20,7 @@ import androidx.navigation.ui.navigateUp
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mobile.cloudkitchen.R
+import com.mobile.cloudkitchen.data.events.PaymentSuccessEvent
 import com.mobile.cloudkitchen.databinding.ActivityHomeBinding
 import com.mobile.cloudkitchen.ui.fragments.HomeFragment
 import com.mobile.cloudkitchen.ui.fragments.LocationFragment
@@ -33,6 +34,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
+
 class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResultListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -41,6 +43,7 @@ class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResul
 
     //  lateinit var sp: SharedPreferences
     private lateinit var menuItem: MenuItem
+    public var listner : (()-> Unit)? = null
     private var locationPermissions = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -264,8 +267,8 @@ class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResul
     }
 
     override fun onPaymentSuccess(p0: String?) {
-        Toast.makeText(this,"Payment Successful : $p0}",Toast.LENGTH_LONG).show()
-
+        EventBus.getDefault().post(PaymentSuccessEvent(p0!!))
+        Toast.makeText(this,"Payment Success : $p0}",Toast.LENGTH_LONG).show()
     }
 
     override fun onPaymentError(p0: Int, p1: String?) {
@@ -273,3 +276,6 @@ class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResul
     }
 }
 
+interface PaymentTrigger{
+    fun paymentSuccess(id:String )
+}
