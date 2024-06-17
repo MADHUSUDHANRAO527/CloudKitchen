@@ -32,6 +32,9 @@ class ProfileFragment : Fragment() {
         val root: View = binding.root
         sp = requireActivity().getSharedPreferences("SP", Context.MODE_PRIVATE)
         binding.nameTxt.text = sp.getString("NAME","NA")
+        binding.orderHistoryLayout.setOnClickListener {
+            (requireActivity() as HomeActivity?)?.loadFragment(OrdersHistoryFragment(), null)
+        }
         return root
     }
 

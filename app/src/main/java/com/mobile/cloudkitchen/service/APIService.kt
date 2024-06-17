@@ -98,29 +98,6 @@ object APIService {
         requestQueue.add(jsonObjectRequest)
     }
 
-    fun makeDashboardBannersAPICall(
-        mContext: Context,
-        listener: ServiceResponse?,
-        tag: String
-    ) {
-        Log.d("URL:", DOMAIN + "/" + tag)
-        val request = JsonArrayRequest(
-            Request.Method.GET,
-            DOMAIN + "/kitchens",
-            null,
-            Response.Listener { response ->
-                try {
-                    listener?.onSuccessResponse(tag, response)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
-        ) { error ->
-            listener?.onFailureResponse(error, tag)
-        }
-        val requestQueue = Volley.newRequestQueue(mContext)
-        requestQueue.add(request)
-    }
 
     fun makeDashboardBannersAPICall(
         mContext: Context,
@@ -439,7 +416,37 @@ object APIService {
 
         queue.add(stringRequest)
     }
-
+    fun createRazorOrderId(
+        mContext: Context,
+        tag: String,
+        listener: ServiceResponse?,
+        data: JSONObject
+    ) {
+        Log.d("URL:", DOMAIN + "/orders/generateOrderId")
+        //   val json = JSONObject(data)
+        val req: JsonObjectRequest = object : JsonObjectRequest(
+            Method.POST, DOMAIN + "/orders/generateOrderId",
+            data,
+            Response.Listener<JSONObject> { response ->
+                listener?.onSuccessResponse(response, tag)
+            },
+            Response.ErrorListener { error ->
+                listener?.onFailureResponse(error, tag)
+            }) {
+            /**
+             * Passing some request headers
+             */
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                //headers.put("Content-Type", "application/json");
+                headers["Authorization"] = "Bearer " + UserUtils.getUserToken(mContext)
+                return headers
+            }
+        }
+        val requestQueue = Volley.newRequestQueue(mContext)
+        requestQueue.add(req)
+    }
     fun callCreateOrder(
         mContext: Context,
         tag: String,
@@ -471,4 +478,34 @@ object APIService {
         val requestQueue = Volley.newRequestQueue(mContext)
         requestQueue.add(req)
     }
+    fun getOrders(
+        mContext: Context,
+        listener: ServiceResponse?,
+        tag: String,
+    ) {
+        Log.d("URL:", DOMAIN + "/$tag")
+        val queue = Volley.newRequestQueue(mContext)
+        val stringRequest =
+            object : StringRequest(
+                Method.GET, DOMAIN + "/$tag",
+                Response.Listener { response ->
+                    try {
+                        listener?.onSuccessResponse(response, tag)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                },
+                Response.ErrorListener {
+                    it.printStackTrace()
+                    listener?.onFailureResponse(it, tag)
+                }) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer " + UserUtils.getUserToken(mContext)
+                    return headers
+                }
+            }
+        queue.add(stringRequest)
+    }
+
 }

@@ -35,7 +35,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 
 
-class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResultListener {
+class HomeActivity : BaseActivity(), PaymentResultWithDataListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
@@ -43,11 +43,11 @@ class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResul
 
     //  lateinit var sp: SharedPreferences
     private lateinit var menuItem: MenuItem
-    public var listner : (()-> Unit)? = null
     private var locationPermissions = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,7 +117,8 @@ class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResul
 
 
     }
-    fun resumeHomeSelection(){
+
+    fun resumeHomeSelection() {
         binding.appBarHome.bottomNavigation.selectedItemId = R.id.btm_nav_order
     }
 
@@ -257,16 +258,21 @@ class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResul
     override fun onResume() {
         super.onResume()
     }
-    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
-        Toast.makeText(this,"Payment Successful : Payment ID: $p0\nPayment Data: ${p1?.data}",Toast.LENGTH_LONG).show()
 
+    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
+        Toast.makeText(
+            this,
+            "Payment Successful : Payment ID: $p0\nPayment Data: ${p1?.data}",
+            Toast.LENGTH_LONG
+        ).show()
+        EventBus.getDefault().post(PaymentSuccessEvent(p1!!))
     }
 
     override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
-        Toast.makeText(this,"Payment Failed : Payment Data: ${p2?.data}",Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Payment Failed : Payment Data: ${p2?.data}", Toast.LENGTH_LONG).show()
     }
 
-    override fun onPaymentSuccess(p0: String?) {
+    /* override fun onPaymentSuccess(p0: String?) {
         EventBus.getDefault().post(PaymentSuccessEvent(p0!!))
         Toast.makeText(this,"Payment Success : $p0}",Toast.LENGTH_LONG).show()
     }
@@ -274,8 +280,7 @@ class HomeActivity : BaseActivity(), PaymentResultWithDataListener, PaymentResul
     override fun onPaymentError(p0: Int, p1: String?) {
         Toast.makeText(this,"Payment Failed : Payment Data: ${p1}",Toast.LENGTH_LONG).show()
     }
+}*/
+
 }
 
-interface PaymentTrigger{
-    fun paymentSuccess(id:String )
-}

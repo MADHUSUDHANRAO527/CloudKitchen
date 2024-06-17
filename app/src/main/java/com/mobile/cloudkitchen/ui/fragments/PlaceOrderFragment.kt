@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CalendarView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -24,22 +23,17 @@ import com.mobile.cloudkitchen.databinding.FragmentPlaceOrderBinding
 import com.mobile.cloudkitchen.service.APIService
 import com.mobile.cloudkitchen.service.ServiceResponse
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
-import com.mobile.cloudkitchen.ui.activity.PaymentTrigger
 import com.mobile.cloudkitchen.utils.AppUtils
 import com.mobile.cloudkitchen.utils.UserUtils
 import com.razorpay.Checkout
 import com.razorpay.PaymentData
-import com.razorpay.PaymentResultListener
-import com.razorpay.PaymentResultWithDataListener
-import okhttp3.internal.Internal.instance
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
-import java.util.HashMap
 
 
-class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
+class PlaceOrderFragment : Fragment(), ServiceResponse {
     private var _binding: FragmentPlaceOrderBinding? = null
 
     // This property is only valid between onCreateView and
@@ -68,33 +62,14 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
         binding.mealTitleTxt.text = UserUtils.getMeal().name
         binding.mealTitle.text = UserUtils.getMeal().name
         binding.mealTitleDesc.text = UserUtils.getMeal().description
-        //  binding.mealsCostTxt.text = onlyMealCost
 
         "${UserUtils.fromHumanDate}-${UserUtils.toHumanDate}".also {
             binding.planDurationTxt.text = it
         }
         UserUtils.timeSlot.also { binding.deliverySlotTxt.text = it }
         _binding!!.paynowBtn.setOnClickListener {
-
-            /*  val razorpay = RazorpayClient("[YOUR_KEY_ID]", "[YOUR_KEY_SECRET]")
-
-              val orderRequest = JSONObject()
-              orderRequest.put("amount", 50000)
-              orderRequest.put("currency", "INR")
-              orderRequest.put("receipt", "receipt#1")
-              val notes = JSONObject()
-              notes.put("notes_key_1", "Tea, Earl Grey, Hot")
-              notes.put("notes_key_1", "Tea, Earl Grey, Hot")
-              orderRequest.put("notes", notes)
-
-              val order: Order = instance.orders.create(orderRequest)
-  */
-
-
-            //   startPayment1()
-            startPayment()
-          //     prepareProcessOrderModel()
-            //   AppUtils.showToast(requireActivity(), "will navigate to payment screen!")
+            _binding?.pBar?.visibility = View.VISIBLE
+            createRazorOrderId()
         }
         binding.changeDurationTxt.setOnClickListener {
             (requireActivity() as HomeActivity?)?.loadFragment(SelectDurationFragment(), null)
@@ -113,11 +88,6 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
             requireActivity(),
             this, "/orders/processOrder"
         )
-
-        val home = (activity as HomeActivity?)
-        home?.listner = {
-            Log.d("TRIggered", ":::::")
-        }
         return root
     }
 
@@ -181,9 +151,10 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
     }
 
     //TODO
-    private fun prepareProcessOrder(paymentEvent:PaymentSuccessEvent) {
+    private fun prepareProcessOrder(data:PaymentData) {
 
         val jsonObject = JSONObject()
+        val paymentInfojsonObject = JSONObject()
         val gson = Gson()
 
         jsonObject.put("user", UserUtils.getUserID(requireActivity()))
@@ -203,6 +174,10 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
         jsonObject.put("planStartDate", UserUtils.fromDate)
         jsonObject.put("planEndDate", UserUtils.toDate)
         jsonObject.put("deliveryTimeSlot", UserUtils.timeSlot)
+        paymentInfojsonObject.put("razorpay_payment_id", data.paymentId)
+        paymentInfojsonObject.put("razorpay_order_id", data.orderId)
+        paymentInfojsonObject.put("razorpay_signature", data.signature)
+        jsonObject.put("paymentInfo",paymentInfojsonObject)
         APIService.callCreateOrder(
             requireActivity(),
             "CREATE_ORDER",
@@ -210,8 +185,18 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
 
         )
     }
+    private fun createRazorOrderId() {
+        val jsonObject = JSONObject()
+        jsonObject.put("amount", UserUtils.getReviewOrder().grandTotal?.toInt())
+        jsonObject.put("currency", "INR")
+        APIService.createRazorOrderId(
+            requireActivity(),
+            "GENERATE_RAZOR_ORDER_ID",
+            this, jsonObject
+        )
+    }
 
-    private fun startPayment() {
+    private fun startPayment(orderId: String) {
         /*
         *  You need to pass the current activity to let Razorpay create CheckoutActivity
         * */
@@ -227,7 +212,7 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
             options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.pn")
             options.put("theme.color", "#3399cc");
             options.put("currency", "INR");
-            //   options.put("order_id", "order_DBJOWzybf0sJbb");
+            options.put("order_id", orderId);
             options.put(
                 "amount",
                 UserUtils.getReviewOrder().grandTotal.toString()
@@ -254,11 +239,36 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
         //{"totalAmount":0,"plannedDates":[],"discount":"10%","grandTotal":0,"savedAmount":0}
         //{"totalAmount":4257,"plannedDates":["2024-06-05","2024-06-06","2024-06-07","2024-06-10","2024-06-11","2024-06-12","2024-06-13","2024-06-14","2024-06-17","2024-06-18","2024-06-19","2024-06-20","2024-06-21","2024-06-24","2024-06-25","2024-06-26","2024-06-27","2024-06-28","2024-07-01","2024-07-02","2024-07-03","2024-07-04","2024-07-05","2024-07-08","2024-07-09","2024-07-10","2024-07-11","2024-07-12","2024-07-15","2024-07-16","2024-07-17","2024-07-18","2024-07-19","2024-07-22","2024-07-23","2024-07-24","2024-07-25","2024-07-26","2024-07-29","2024-07-30","2024-07-31","2024-08-01","2024-08-02"],
         // "discount":"5%","grandTotal":4044.15,"savedAmount":212.85000000000002}
-        var gson = Gson()
-        if (tag.toString().contains("CREATE_ORDER")) {
+        val gson = Gson()
+        if (tag.toString().contains("processOrder")) {
+            val processOrder = gson.fromJson(
+                response.toString(),
+                ReviewOrder::class.java
+            )
+            UserUtils.setReviewOrder(processOrder)
+            val onlyMealCost =
+                requireActivity().resources.getString(R.string.Rs) + processOrder.totalAmount.toString()
+            val mealsCostTxt = onlyMealCost +
+                    "(" + if (UserUtils.planType.contains("W")) UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() else UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()
+            val savedAmountTxt =
+                requireActivity().resources.getString(R.string.Rs) + processOrder.savedAmount.toString()
+
+            binding.planTypeBtn.text = if (UserUtils.planType.contains("W")) "WEEKLY" else "MONTHLY"
+            binding.mealsCostTxt.text = mealsCostTxt
+            binding.totalSavingTxt.text = savedAmountTxt
+            binding.subscriptionCostTxt.text = onlyMealCost
+            _binding?.pBar?.visibility = View.GONE
+        }
+        else if(tag.toString().contains("GENERATE_RAZOR_ORDER_ID")){
+            val jsonObject = response as JSONObject
+
+            startPayment(jsonObject.getString("id"))
+            //expected output -
+        }
+        else if (tag.toString().contains("CREATE_ORDER")) {
             Log.d("SUCCESS:", "")
-            var jsonObject = response as JSONObject
-            AppUtils.showToast(requireActivity(), jsonObject.getString("message"))
+            val jsonObject = response as JSONObject
+          //  AppUtils.showToast(requireActivity(), jsonObject.getString("message"))
 
             val li = LayoutInflater.from(context)
             val promptsView: View = li.inflate(R.layout.success_popup, null)
@@ -276,43 +286,18 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
                 (requireActivity() as HomeActivity?)?.loadFragment(HomeFragment(), null)
             }
             alertDialog!!.show()
+
+            _binding?.pBar?.visibility = View.GONE
             //{
             //  "message": "Your order placed successfully"
             //}
-        } else if (tag.toString().contains("processOrder")) {
-            var processOrder = gson.fromJson(
-                response.toString(),
-                ReviewOrder::class.java
-            )
-            UserUtils.setReviewOrder(processOrder)
-            val onlyMealCost =
-                requireActivity().resources.getString(R.string.Rs) + processOrder.totalAmount.toString()
-            val mealsCostTxt = onlyMealCost +
-                    "(" + if (UserUtils.planType.contains("W")) UserUtils.getKitchen().availablePlans[0].noOfMeals.toString() else UserUtils.getKitchen().availablePlans[1].noOfMeals.toString()
-            val savedAmountTxt =
-                requireActivity().resources.getString(R.string.Rs) + processOrder.savedAmount.toString()
-
-            binding.planTypeBtn.text = if (UserUtils.planType.contains("W")) "WEEKLY" else "MONTHLY"
-            binding.mealsCostTxt.text = mealsCostTxt
-            binding.totalSavingTxt.text = savedAmountTxt
-            binding.subscriptionCostTxt.text = onlyMealCost
         }
-        _binding?.pBar?.visibility = View.GONE
     }
 
     override fun onFailureResponse(error: VolleyError, tag: Any?) {
         _binding?.pBar?.visibility = View.GONE
         AppUtils.showErrorMsg(error, tag.toString(), requireActivity())
     }
-
-    /* override fun onPaymentSuccess(p0: String?,p1:PaymentData) {
-         Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
-     }
-
-     override fun onPaymentError(p0: Int, p1: String?) {
-         Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
-
-     }*/
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(userAddress: String?) {
@@ -323,15 +308,8 @@ class PlaceOrderFragment : Fragment(), ServiceResponse, PaymentTrigger {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(paymentEvent: PaymentSuccessEvent) {
        // Toast.makeText(activity, "Success in payment: " + paymentEvent.id, Toast.LENGTH_LONG).show()
-        prepareProcessOrder(paymentEvent)
-    }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun paymentSuccess(id: String) {
-        Log.d("TRIggered", ":::::")
+        prepareProcessOrder(paymentEvent.data)
     }
 
     override fun onDestroy() {
