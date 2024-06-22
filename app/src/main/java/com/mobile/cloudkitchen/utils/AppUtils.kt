@@ -9,7 +9,6 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.android.volley.AuthFailureError
 import com.android.volley.ClientError
@@ -38,11 +37,13 @@ import com.mobile.cloudkitchen.ui.activity.HomeActivity
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import java.io.IOException
+import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 
 object AppUtils {
@@ -206,6 +207,17 @@ object AppUtils {
 
         val output = df.format(c.time)
         return output
+    }
+    fun getReadableDateFromUTC(fromDate:String):String{
+        //2024-05-10T02:30:46.724Z
+        var utcFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        utcFormat.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+        val date: String = utcFormat.format(fromDate)
+        utcFormat =  SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        val strDate = utcFormat.format(date);
+        System.out.println("Date Format with E, dd MMM yyyy HH:mm:ss z : "+strDate);
+
+        return strDate
     }
     fun showErrorMsg(error: VolleyError, tag: String?, activity: Activity) {
         var mTag = tag

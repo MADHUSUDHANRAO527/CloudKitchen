@@ -1,7 +1,6 @@
 package com.mobile.cloudkitchen.ui.adapter
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +11,17 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mobile.cloudkitchen.R
-import com.mobile.cloudkitchen.data.model.KitchensModel
 import com.mobile.cloudkitchen.data.model.Orders
-import com.mobile.cloudkitchen.ui.activity.HomeActivity
-import com.mobile.cloudkitchen.ui.fragments.KitchenDetailsFragment
+import com.mobile.cloudkitchen.utils.AppUtils
 
-class OrderHistoryAdapter(private val mContext: Context, private var ordersList: ArrayList<Orders>) :
+class OrderHistoryAdapter(private val mContext: Context, private var ordersList: List<Orders>) :
     RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View = LayoutInflater
             .from(parent.context)
             .inflate(
-                R.layout.meals_list_row,
+                R.layout.orders_list_row,
                 parent,
                 false
             )
@@ -33,21 +30,26 @@ class OrderHistoryAdapter(private val mContext: Context, private var ordersList:
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //  var amount: TextView
-        lateinit var mealsImage: ImageView
-        lateinit var kitchenTitle: TextView
-        lateinit var kitchenDesc: TextView
-        lateinit var rating: TextView
-        lateinit var startsFromPrice: TextView
+        lateinit var mealImage: ImageView
+        lateinit var mealTitle: TextView
+        lateinit var planType: TextView
+        lateinit var orderDateTimeTxt: TextView
+        lateinit var orderAmountTxt: TextView
+        lateinit var statusTxt: TextView
         lateinit var deliveryTime: TextView
       lateinit  var kitchenCardView : CardView
         init {
-            mealsImage = view.findViewById(R.id.meals_image)
-            kitchenTitle = view.findViewById(R.id.kitchen_title_txt)
-            kitchenDesc = view.findViewById(R.id.kitchen_title_desc)
-            rating = view.findViewById(R.id.rating_txt)
-            startsFromPrice =view.findViewById(R.id.cost_txt)
-            deliveryTime = view.findViewById(R.id.delivery_time_txt)
-            kitchenCardView = view.findViewById(R.id.kitchen_card_view)
+            mealImage = view.findViewById(R.id.meal_img)
+            mealTitle = view.findViewById(R.id.meal_title_txt)
+            planType = view.findViewById(R.id.plan_type_txt)
+            orderDateTimeTxt = view.findViewById(R.id.order_date_time_txt)
+            orderAmountTxt =view.findViewById(R.id.order_amount_txt)
+            statusTxt =view.findViewById(R.id.status_txt)
+
+            /*  rating = view.findViewById(R.id.rating_txt)
+              startsFromPrice =view.findViewById(R.id.cost_txt)
+              deliveryTime = view.findViewById(R.id.delivery_time_txt)
+              kitchenCardView = view.findViewById(R.id.kitchen_card_view)*/
         }
     }
 
@@ -57,7 +59,16 @@ class OrderHistoryAdapter(private val mContext: Context, private var ordersList:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.kitchenTitle.text = ordersList[position].createdAt
+        holder.mealTitle.text = ordersList[position].meal!!.name
+        Glide.with(mContext)
+            .load(ordersList[position].meal?.images!![0])
+            .into(holder.mealImage)
+        holder.planType.text = ordersList[position].plan!!.name
+  //      holder.orderDateTimeTxt.text = AppUtils.getReadableDateFromUTC(ordersList[position].createdAt!!)
+        holder.orderDateTimeTxt.text = ordersList[position].createdAt!!
+        holder.orderAmountTxt.text =  mContext.resources.getString(
+            R.string.Rs)+" "+ ordersList[position].grandTotal.toString()
+        holder.statusTxt.text = ordersList[position].status.toString()
        /* holder.kitchenDesc.text = kitchensList[position].description
         Glide.with(mContext)
             .load(kitchensList[position].bannerImage)

@@ -9,7 +9,7 @@ data class Orders(
     @SerializedName("meal") var meal: Meal? = Meal(),
     @SerializedName("plan") var plan: Plan? = Plan(),
     @SerializedName("createdBy") var createdBy: String? = null,
-    @SerializedName("deliveryAddress") var deliveryAddress: String? = null,
+    @SerializedName("deliveryAddress") var deliveryAddress: Addresses? = null,
     @SerializedName("grandTotal") var grandTotal: Int? = null,
     @SerializedName("isPaymentDone") var isPaymentDone: Boolean? = null,
     @SerializedName("status") var status: String? = null,
