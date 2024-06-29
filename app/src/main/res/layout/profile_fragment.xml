@@ -206,6 +206,7 @@
             android:outlineSpotShadowColor="@color/black"
             app:cardCornerRadius="12dp">
             <RelativeLayout
+                android:id="@+id/your_subscriptions_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
@@ -225,15 +226,16 @@
                         android:src="@drawable/ic_subscription"
                         app:tint="@color/white" />
                 </RelativeLayout>
+
                 <TextView
                     style="@style/SetPoppinsSemiBoldFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/black"
                     android:layout_marginStart="18dp"
                     android:layout_toEndOf="@+id/your_subscriptions_img"
-                    android:text="@string/your_sub" />
+                    android:text="@string/your_sub"
+                    android:textColor="@color/black" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

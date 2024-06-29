@@ -1,8 +1,6 @@
 package com.mobile.cloudkitchen.data.model
 
 import com.example.example.Meal
-import com.example.example.Plan
-import com.example.example.User
 import com.google.gson.annotations.SerializedName
 data class Orders(
     @SerializedName("user") var user: User? = User(),

@@ -35,6 +35,9 @@ class ProfileFragment : Fragment() {
         binding.orderHistoryLayout.setOnClickListener {
             (requireActivity() as HomeActivity?)?.loadFragment(OrdersHistoryFragment(), null)
         }
+        binding.yourSubscriptionsLayout.setOnClickListener {
+            (requireActivity() as HomeActivity?)?.loadFragment(SubscriptionsFragment(), null)
+        }
         return root
     }
 

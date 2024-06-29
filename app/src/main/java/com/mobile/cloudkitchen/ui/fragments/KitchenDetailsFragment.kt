@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.VolleyError
 import com.example.example.Kitchen
 import com.example.example.Meals
-import com.example.example.User
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.mobile.cloudkitchen.ui.adapter.KitchenMealsAdapter
@@ -25,9 +24,6 @@ import com.mobile.cloudkitchen.service.ServiceResponse
 import com.mobile.cloudkitchen.ui.activity.HomeActivity
 import com.mobile.cloudkitchen.utils.AppUtils
 import com.mobile.cloudkitchen.utils.UserUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 

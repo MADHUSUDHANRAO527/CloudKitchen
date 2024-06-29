@@ -508,4 +508,33 @@ object APIService {
         queue.add(stringRequest)
     }
 
+    fun getSubscriptions(
+        mContext: Context,
+        listener: ServiceResponse?,
+        tag: String,
+    ) {
+        Log.d("URL:", DOMAIN + "/$tag")
+        val queue = Volley.newRequestQueue(mContext)
+        val stringRequest =
+            object : StringRequest(
+                Method.GET, DOMAIN + "/$tag",
+                Response.Listener { response ->
+                    try {
+                        listener?.onSuccessResponse(response, tag)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                },
+                Response.ErrorListener {
+                    it.printStackTrace()
+                    listener?.onFailureResponse(it, tag)
+                }) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer " + UserUtils.getUserToken(mContext)
+                    return headers
+                }
+            }
+        queue.add(stringRequest)
+    }
 }
