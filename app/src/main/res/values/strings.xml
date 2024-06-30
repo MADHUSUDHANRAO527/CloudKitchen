@@ -87,4 +87,5 @@
     <string name="your_sub">Your Subscriptions</string>
     <string name="meal">meal name</string>
     <string name="amount">amount</string>
+    <string name="manage_subscription">Manage Subscription</string>
 </resources>
